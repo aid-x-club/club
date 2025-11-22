@@ -159,7 +159,7 @@ Department of Artificial Intelligence & Data Science
 
 ## Developer Credits
 
-**Website Developed By:** [Shubham Gundu](https://github.com/theushubhamgundu)
+**Website Developed By:** [Shubham Gundu](https://github.com/theshubhamgundu)
 
 This website was created to provide a professional digital presence for the AID-X Club.
 
