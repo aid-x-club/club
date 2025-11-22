@@ -46,144 +46,48 @@ const faqs = () => {
 
         <div className="faqs-section">
           <div className="faqs-content" onClick={handleArrow}>
-            <h1 className="faqs-content-title">
-              What is a hackathon?
-              <ChevronRightIcon
-                style={styles.container}
-                className="faqs-arrow"
-              />
-            </h1>
-            <p className="faqs-content-description">
-              A hackathon is a social coding event that brings computer
-              programmers and other interested people together to improve upon
-              or build a new software program or a hardware solution for the
-              provided problem statements.
-            </p>
+            <h1 className="faqs-content-title">What is AID-X Club?<ChevronRightIcon style={styles.container} className="faqs-arrow" /></h1>
+            <p className="faqs-content-description">AID-X Club is a student-driven initiative for AI, Data Science, and modern technologies. We provide a platform for learning, building projects, and networking with peers and industry experts.</p>
           </div>
 
           <div className="faqs-content" onClick={handleArrow}>
-            <h1 className="faqs-content-title">
-              What is “Hack-A-Tank”?
-              <ChevronRightIcon
-                style={styles.container}
-                className="faqs-arrow"
-              />
-            </h1>
-            <p className="faqs-content-description">
-              Hack-A-Tank is the first 24-hour national-level hackathon
-              organized by the SRM Valliammai engineering college in
-              collaboration with Whitehatians – Club of the Department of Cyber
-              Security and the Student Branch of Computer Society of India (CSI-
-              SB).
-            </p>
+            <h1 className="faqs-content-title">Who can join?<ChevronRightIcon style={styles.container} className="faqs-arrow" /></h1>
+            <p className="faqs-content-description">All undergraduate and postgraduate students interested in our tech domains are welcome. No prerequisites required!</p>
           </div>
 
           <div className="faqs-content" onClick={handleArrow}>
-            <h1 className="faqs-content-title">
-              Who can participate?
-              <ChevronRightIcon
-                style={styles.container}
-                className="faqs-arrow"
-              />
-            </h1>
-            <p className="faqs-content-description">
-              Hack-A-Tank is open to all undergraduate students from all
-              colleges across India.
-            </p>
+            <h1 className="faqs-content-title">What activities does the club organize?<ChevronRightIcon style={styles.container} className="faqs-arrow" /></h1>
+            <p className="faqs-content-description">We organize workshops, bootcamps, coding competitions, project showcases, guest lectures from industry experts, and hands-on project building across our seven tech domains.</p>
           </div>
 
           <div className="faqs-content" onClick={handleArrow}>
-            <h1 className="faqs-content-title">
-              How much is the registration fee?
-              <ChevronRightIcon
-                style={styles.container}
-                className="faqs-arrow"
-              />
-            </h1>
-            <p className="faqs-content-description">
-              After the scrutiny process, the organizing committee will release
-              the shortlisted teams for the finale. The selected team must pay a
-              registration fee of Rs. 1000/- per team, which includes GST. It
-              contributes to goodie bags, food, and refreshments served during
-              the event. The registration fee is non-refundable and
-              non-transferable. Teams are advised to complete the registration
-              process as soon as possible to secure their participation in the
-              event. Upon successful completion of the registration, teams will
-              receive further instructions from the organizing committee.
-            </p>
+            <h1 className="faqs-content-title">Is there a membership fee?<ChevronRightIcon style={styles.container} className="faqs-arrow" /></h1>
+            <p className="faqs-content-description">No, joining AID-X Club is completely free! We encourage all interested students to participate.</p>
           </div>
 
           <div className="faqs-content" onClick={handleArrow}>
-            <h1 className="faqs-content-title">
-              Is the hackathon online or offline?
-              <ChevronRightIcon
-                style={styles.container}
-                className="faqs-arrow"
-              />
-            </h1>
-            <p className="faqs-content-description">
-              The first round will be abstract submission which is completely
-              done in virtual mode. Further upon registration, you will be
-              contacted by our team and given a brief on the process of abstract
-              submission. The shortlisted team should appear physically for the
-              final.
-            </p>
+            <h1 className="faqs-content-title">How do I stay updated?<ChevronRightIcon style={styles.container} className="faqs-arrow" /></h1>
+            <p className="faqs-content-description">Follow us on Instagram @aid_x.club and LinkedIn. Fill out the "Join Club" form to subscribe to our newsletter.</p>
           </div>
+
           <div className="faqs-content" onClick={handleArrow}>
-            <h1 className="faqs-content-title">
-              How to register for the hackathon?
-              <ChevronRightIcon
-                style={styles.container}
-                className="faqs-arrow"
-              />
-            </h1>
-            <p className="faqs-content-description">
-              Click the register button on the home page and you will be
-              directed to the respective Google form. Kindly submit the required
-              details and our organizing team will contact you as soon as
-              possible.
-            </p>
+            <h1 className="faqs-content-title">What are the 7 Tech Domains?<ChevronRightIcon style={styles.container} className="faqs-arrow" /></h1>
+            <p className="faqs-content-description">AI & Machine Learning, Data Science & Analytics, Web & Mobile Development, Cloud & DevOps, Cybersecurity, IoT & Automation, and UI/UX Design.</p>
           </div>
+
           <div className="faqs-content" onClick={handleArrow}>
-            <h1 className="faqs-content-title">
-              What is the prize money of the winning team?
-              <ChevronRightIcon
-                style={styles.container}
-                className="faqs-arrow"
-              />
-            </h1>
-            <p className="faqs-content-description">
-              The event has a prize pool of Rs 25,000 for the winners.
-            </p>
+            <h1 className="faqs-content-title">How do I participate in projects?<ChevronRightIcon style={styles.container} className="faqs-arrow" /></h1>
+            <p className="faqs-content-description">Join the club and attend our events! We share information about ongoing projects that match your interests and skill level.</p>
           </div>
+
           <div className="faqs-content" onClick={handleArrow}>
-            <h1 className="faqs-content-title">
-              What is the team size to participate in the Hack-A-Tank?
-              <ChevronRightIcon
-                style={styles.container}
-                className="faqs-arrow"
-              />
-            </h1>
-            <p className="faqs-content-description">
-              The teams must have a minimum of 2 members and a maximum of 3
-              members.
-            </p>
+            <h1 className="faqs-content-title">Can I become a coordinator?<ChevronRightIcon style={styles.container} className="faqs-arrow" /></h1>
+            <p className="faqs-content-description">Yes! Active members with technical skills and leadership can become coordinators. Check our Team section for current coordinators.</p>
           </div>
+
           <div className="faqs-content" onClick={handleArrow}>
-            <h1 className="faqs-content-title">
-              What are the prerequisites considered for registering?
-              <ChevronRightIcon
-                style={styles.container}
-                className="faqs-arrow"
-              />
-            </h1>
-            <p className="faqs-content-description">
-              Participants may need to have knowledge and skills in areas such
-              as electronics, programming, data analytics, and IoT technologies,
-              depending on the theme of the hackathon. Participants must need to
-              bring their own laptops, sensors, microcontrollers, and other
-              necessary tools and equipment.
-            </p>
+            <h1 className="faqs-content-title">What are the benefits?<ChevronRightIcon style={styles.container} className="faqs-arrow" /></h1>
+            <p className="faqs-content-description">Practical knowledge, portfolio building, GitHub skills, networking, certificates, industry connections, and career opportunities!</p>
           </div>
         </div>
       </div>

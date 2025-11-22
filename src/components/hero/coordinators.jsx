@@ -6,19 +6,19 @@ const coordinators = () => {
       <div className="parent-convener">
         <div className="convener-title">
           <img src="/images/rrr.webp" alt="" className="convener-logo" />
-          <h1 className="convener-title-name"> Faculty Coordinator</h1>
+          <h1 className="convener-title-name">Faculty Coordinator</h1>
         </div>
 
         <div className="convener-container" style={{justifyContent: "center"}}>
           <div className="convener-card">
             <img
+              src="/images/s/faculty_coordinator.jpg"
+              alt="Mr. Sai Lalith Prasad"
               className="convener-card-image"
-              src="/images/faculty_coordinator.jpg"
-              alt="lalith - Assistant professor"
             />
-            <h1 className="convener-name">Mr. T. Sai Lalith Prasad</h1>
+            <h1 className="convener-name">Mr. Sai Lalith Prasad</h1>
             <h1 className="convener-position">
-              Assistant Professor - AI&DS
+              Assistant Professor, Department of Artificial Intelligence & Data Science
             </h1>
           </div>
         </div>

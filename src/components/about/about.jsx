@@ -41,16 +41,11 @@ const about = () => {
         <div className="foundation">
           <div className="foundation-title " id="about-right">
             <img
-              src="/images/srm.webp"
+              src="/images/s/Vignan_logo.png"
               alt="vignan logo"
               className="about-srm-logo"
             />
             Vignan Institute of Technology and Science
-            <img
-              src="/images/srmvec.webp"
-              alt="vignan logo"
-              className="about-srmvec-logo"
-            />
           </div>
           <div className="foundation-description" id="about-left">
             Vignan Institute of Technology and Science (VITS), located in Hyderabad, is a premier engineering institution committed to providing quality education and fostering innovation. The institute is dedicated to developing skilled professionals equipped with cutting-edge technical knowledge and practical expertise. With a focus on Artificial Intelligence and Data Science, VITS provides a platform for students to excel in modern technologies and contribute to technological advancement.
@@ -61,11 +56,10 @@ const about = () => {
           <div
             className="about-srmvec-title "
             id="about-left"
-            onClick={() => handleWebClicks("https://www.vignan.ac.in")}
           >
             <img
               className="about-srmvec-logo"
-              src="/images/srmvec.webp"
+              src="/images/s/Vignan_logo.png"
               alt="vignan logo"
             />
             About Vignan Institute
@@ -78,12 +72,11 @@ const about = () => {
           <div
             className="about-csi-title"
             id="about-right"
-            onClick={() => handleWebClicks("https://www.vignan.ac.in")}
           >
             <img
               className="about-csi-logo"
-              src="/images/csi1.webp"
-              alt="vignan logo"
+              src="/images/s/club_logo.png"
+              alt="club logo"
             />
             Our Activities
           </div>
@@ -95,11 +88,10 @@ const about = () => {
           <div
             className="about-whitehatians-title"
             id="about-left"
-            onClick={() => handleWebClicks("https://www.srmvalliammai.ac.in")}
           >
             <img
               className="about-whitehatians-logo"
-              src="/images/whitehatians.webp"
+              src="/images/s/club_logo.png"
               alt="whitehatians logo"
             />
             Student Benefits

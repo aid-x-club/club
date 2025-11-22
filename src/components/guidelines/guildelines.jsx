@@ -8,59 +8,38 @@ const guildelines = () => {
   return (
     <React.Fragment>
       <div className="parent-guidelines">
-        <div className="guidelines-title">Guidelines</div>
+        <div className="guidelines-title">Club Guidelines & Code of Conduct</div>
         <div className="guidelines-container">
           <div className="guidelines-content">
             <div className="guidelines-1">
-              1. The teams can have a minimum of 2 members and a maximum of 3
-              members. 🤝👥
-              <br /> <br />
-              2. The last date for team registration is 25th August 2023. ⏰🗓️{" "}
+              1. All members must treat fellow members, coordinators, and guests with respect and professionalism. <br /> <br />
+              2. Active participation in club activities is encouraged but not mandatory. Attend events that interest you. <br />
               <br />
+              3. Technical knowledge sharing and collaborative learning are core values of our club. <br />
               <br />
-              3. The last date for abstract submission is 28th August 2023. 📝🗓️{" "}
+              4. Projects should be original. Do not copy or plagiarize code or ideas from other members without proper attribution. <br />
               <br />
+              5. Members must follow the university's code of conduct and maintain academic integrity in all club activities. <br />
               <br />
-              4. The project should be unique and shouldn't have ever been
-              published in any other journals or competitions. 🚀🔍 <br />
+              6. Any form of harassment, discrimination, or inappropriate behavior will not be tolerated. <br />
               <br />
-              5. The event will have three phases of judge review. Projects will
-              be evaluated every 8 hours from the beginning of the finale. 👁️‍🗨️🕒{" "}
-              <br />
-              <br />
-              6. The project's work should sustain the whole 24 hours; if it
-              fails to do so, the team will be disqualified immediately. 🏆🕒❌{" "}
-              <br />
-              <br />
-              7. Code of conduct is strictly monitored, and any case of
-              uncivilized behavior will result in the whole team's
-              disqualification. 🚫👮‍♂️❌ <br />
+              7. Respect for diversity and inclusion is mandatory. We welcome members from all backgrounds and expertise levels. <br />
               <br />
             </div>
             <div className="guidelines-2">
-              8. The abstract submission round is completely free for all teams
-              that have registered on or before the 25th of August 2023. 🆓📅{" "}
+              8. Club resources and equipment should be used responsibly and returned in good condition. <br />
               <br />
+              9. Coordinators make decisions based on fairness and the best interest of the club community. <br />
               <br />
-              9. The shortlisted/scrutinized teams for the finale of
-              "HACK-A-TANK" will be announced by 4:00 pm on the 29th of August
-              2023. 📣🏁 10. The Finale round begins at 10:00 am on 8th
-              September 2023 and concludes at 5:00 pm on the 9th September 2023.
-              🏁🕙🏁
+              10. Members are expected to communicate professionally in club channels and events. <br />
               <br />
-              <br /> 11. The finale round will be offline and held at our SRM
-              VALLIAMMAI ENGINEERING COLLEGE, Potheri, Chennai. 🏛️📍 <br />
+              11. All club activities follow Vignan Institute of Technology and Science policies and guidelines. <br />
               <br />
-              12. Power outlets and worksheets will be provided to all teams
-              prior to the commencement of the event. 🔌📑 <br />
+              12. Feedback and suggestions for club improvement are always welcome. Reach out to coordinators with your ideas. <br />
               <br />
-              13. All technical and physical requirements for the projects
-              should be brought by the team only, and no assistance will be
-              provided in this case. ⚙️🛠️🚫
-              <br /> <br />
-              14. Teams must present their projects in a clear and organized
-              manner during the finale, ensuring effective communication of
-              their ideas. 🗣️📊
+              13. Members should maintain confidentiality regarding internal club discussions and decisions. <br />
+              <br />
+              14. Violations of these guidelines may result in a warning or removal from the club. Serious violations will be escalated to university authorities. <br />
             </div>
           </div>
         </div>

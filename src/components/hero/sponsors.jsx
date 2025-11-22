@@ -7,7 +7,7 @@ import Coordinators from "./coordinators";
 const sponsors = () => {
   return (
     <React.Fragment>
-      <div className="parent-sponsors">
+      <div id="faqs" className="parent-sponsors">
         <h1 className="sponsors-title">
           Collaborations
           <img src="/images/rrr.webp" alt="arrow-logo" />

@@ -8,12 +8,7 @@ import {
   Hero,
   Events,
   Guildelines,
-  Set1,
-  Set2,
-  Judges,
   About,
-  Verify,
-  Login,
 } from "./components";
 
 import ReactGA from "react-ga";
@@ -60,24 +55,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           }
         />
         <Route
-          path="/set2"
-          element={
-            <div className="set2-bg">
-              <Navbar />
-              <Set2 />
-            </div>
-          }
-        />
-        <Route
-          path="/set1"
-          element={
-            <div className="set1-bg">
-              <Navbar />
-              <Set1 />
-            </div>
-          }
-        />
-        <Route
           path="/about"
           element={
             <div>
@@ -86,17 +63,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             </div>
           }
         />
-        <Route
-          path="/judges"
-          element={
-            <div>
-              <Navbar />
-              <Judges />
-            </div>
-          }
-        />
-        <Route path="/qr/verify/:id" element={<Verify />} />
-        <Route path="/login" element={<Login />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

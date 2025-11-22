@@ -30,7 +30,7 @@ const Navbar = () => {
     ReactGA.event({
       category: "Social Icon",
       action: "click",
-      label: "Youtube",
+      label: "GitHub",
     });
     window.open("https://github.com/AI-Data-Excellence-Club");
   };
@@ -39,7 +39,7 @@ const Navbar = () => {
     ReactGA.event({
       category: "Social Icon",
       action: "click",
-      label: "Discord",
+      label: "Email",
     });
 
     window.open("mailto:aidx.club@gmail.com");
@@ -100,7 +100,7 @@ const Navbar = () => {
               <div className="fb">
                 <SocialIcon
                   onClick={handleFb}
-                  network="facebook"
+                  network="linkedin"
                   style={{
                     height: "3vw",
                     width: "3vw",
@@ -111,7 +111,7 @@ const Navbar = () => {
               <div className="yt">
                 <SocialIcon
                   onClick={handleYt}
-                  network="youtube"
+                  network="github"
                   style={{
                     height: "3vw",
                     width: "3vw",
@@ -121,7 +121,7 @@ const Navbar = () => {
               <div className="discord-icon">
                 <SocialIcon
                   onClick={handleDiscord}
-                  network="discord"
+                  network="email"
                   style={{
                     height: "3vw",
                     width: "3vw",
@@ -139,18 +139,18 @@ const Navbar = () => {
               <p onClick={() => handleScroll("#agenda")}>Agenda</p>
             </li>
             <li>
-              <p onClick={() => handleScroll("#schedule")}>Schedule</p>
+              <p onClick={() => handleScroll("#schedule")}>Tech Domains</p>
             </li>
             <li>
-              <p onClick={() => handleScroll("#faqs")}>FAQs</p>
+              <p onClick={() => handleScroll("#faqs")}>Collaboration</p>
             </li>
             <li>
-              <p onClick={() => handleScroll("#contact")}>Contact</p>
+              <p onClick={() => handleScroll("#contact")}>Team</p>
             </li>
           </ul>
           <div className="last">
             <h2 className="register">
-              <p onClick={handleRegisterClick}> Register</p>
+              <p onClick={handleRegisterClick}> Join Club</p>
             </h2>
           </div>
         </div>
@@ -168,7 +168,7 @@ const Navbar = () => {
             <div className="last-mobile">
               <h2 className="register-mobile">
                 <a href="https://forms.gle/mqHSf1kpoTUiMURH6" target="_blank">
-                  Register
+                  Join Club
                 </a>
               </h2>
             </div>
@@ -186,13 +186,13 @@ const Navbar = () => {
                 <p onClick={() => handleScroll("#agenda")}>Agenda</p>
               </li>
               <li>
-                <p onClick={() => handleScroll("#schedule")}>Schedule</p>
+                <p onClick={() => handleScroll("#schedule")}>Tech Domains</p>
               </li>
               <li>
-                <p onClick={() => handleScroll("#faqs")}>FAQs</p>
+                <p onClick={() => handleScroll("#faqs")}>Collaboration</p>
               </li>
               <li>
-                <p onClick={() => handleScroll("#contact")}>Contact</p>
+                <p onClick={() => handleScroll("#contact")}>Team</p>
               </li>
             </ul>
           </div>

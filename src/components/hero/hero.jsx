@@ -6,6 +6,7 @@ import VanillaTilt from "vanilla-tilt";
 import Agenda from "./agenda";
 import Schedule from "./schedule";
 import Sponsors from "./sponsors";
+import CoreSkillsModal from "./CoreSkillsModal";
 import { Footer } from "../";
 import { ReactComponent as Calender } from "../../assets/calender.svg";
 import { ReactComponent as Info } from "../../assets/info.svg";
@@ -14,6 +15,8 @@ import { ReactComponent as ArrowRightWhite } from "../../assets/arrow-right-whit
 import { ReactComponent as ArrowRightBlack } from "../../assets/arrow-right-black.svg";
 
 const hero = () => {
+  const [showCoreSkillsModal, setShowCoreSkillsModal] = useState(false);
+
   const handleRegisterClick = () => {
     ReactGA.event({
       category: "Button",
@@ -29,6 +32,22 @@ const hero = () => {
       label: `${card}`,
     });
     window.open(`${card}`, "_self");
+  };
+  const handleComingSoon = () => {
+    ReactGA.event({
+      category: "Button",
+      action: "click",
+      label: "Coming Soon",
+    });
+    alert("Coming Soon!");
+  };
+  const handleCoreSkills = () => {
+    ReactGA.event({
+      category: "Button",
+      action: "click",
+      label: "Core Skills",
+    });
+    setShowCoreSkillsModal(true);
   };
   const [countdown, setCountdown] = useState({
     days: 0,
@@ -60,8 +79,8 @@ const hero = () => {
         {/* <div className="progress_bar"></div> */}
         <div className=" tag-hero-mobile">
           <img
-            src="/images/srm.webp"
-            alt="srm logo"
+            src="/images/s/Vignan_logo.png"
+            alt="vignan logo"
             width="40vw"
             className="hero-srm-logo"
           />
@@ -72,12 +91,6 @@ const hero = () => {
             </div>
             AI & Data Excellence
           </div>
-          <img
-            src="/images/srmvec.webp"
-            alt="srmvec logo"
-            width="60vw"
-            className="hero-srmvec-logo"
-          />
         </div>
 
         {/* ----------------------- Page 1 ------------------------- */}
@@ -98,7 +111,7 @@ const hero = () => {
 
             <div className="register_now" onClick={handleRegisterClick}>
               <div>
-                <a>REGISTER NOW </a>
+                <a>JOIN CLUB </a>
               </div>
               <div>
                 {" "}
@@ -108,17 +121,17 @@ const hero = () => {
             <div className="countdown-main">
               <div className="countdown anim">
                 <div className="day-card anim">
-                  <h3 className="day">7</h3>
+                  <h3 className="day">15+</h3>
                   <h3>Tech Domains</h3>
                 </div>
                 <div className="sep">•</div>
                 <div className="hour-card anim">
-                  <h3 className="hours">500+</h3>
+                  <h3 className="hours">200+</h3>
                   <h3>Members</h3>
                 </div>
                 <div className="sep">•</div>
                 <div className="min-card anim">
-                  <h3 className="minutes">25+</h3>
+                  <h3 className="minutes">32+</h3>
                   <h3>Projects</h3>
                 </div>
                 <div className="sep">•</div>
@@ -145,11 +158,11 @@ const hero = () => {
               </h3>
               <p
                 className="text2"
-                onClick={() => handleCardClicks("/guidelines")}
+                onClick={handleComingSoon}
               >
                 Activities <ArrowRightWhite className="arrow-right-icon" />
               </p>
-              <p className="text3" onClick={() => handleCardClicks("/events")}>
+              <p className="text3" onClick={handleComingSoon}>
                 Events <ArrowRightWhite className="arrow-right-icon" />
               </p>
             </div>
@@ -162,8 +175,8 @@ const hero = () => {
                 Our Mission
                 <ArrowRightWhite className="arrow-right-icon" />
               </p>
-              <p className="text6" onClick={() => handleCardClicks("/judges")}>
-                Club Structure
+              <p className="text6" onClick={() => handleCardClicks("#contact")}>
+                Club Coordinators
                 <ArrowRightWhite className="arrow-right-icon" />
               </p>
             </div>
@@ -172,10 +185,10 @@ const hero = () => {
               <div className="flex justify-items-start">
                 <h3 className="text7">Tech Domains</h3>
               </div>
-              <p className="text8" onClick={() => handleCardClicks("/set1")}>
+              <p className="text8" onClick={handleCoreSkills}>
                 Core Skills <ArrowRightBlack className="arrow-right-icon" />
               </p>
-              <p className="text9" onClick={() => handleCardClicks("/set2")}>
+              <p className="text9" onClick={() => handleCardClicks("#schedule")}>
                 Specializations <ArrowRightBlack className="arrow-right-icon" />
               </p>
             </div>
@@ -220,6 +233,7 @@ const hero = () => {
       <div className="bg-sep"></div>
       <Sponsors />
       <Footer />
+      <CoreSkillsModal isOpen={showCoreSkillsModal} onClose={() => setShowCoreSkillsModal(false)} />
     </React.Fragment>
   );
 };

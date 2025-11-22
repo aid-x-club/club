@@ -2,4 +2,4 @@ User-agent: *
 Disallow: /images/
 Disallow: /fonts/
 Disallow: /docs/
-Sitemap: https://hackatank.shadowctrl.me/sitemap.xml
+Sitemap: https://aidx-club.tech/sitemap.xml

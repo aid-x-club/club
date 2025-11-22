@@ -2,9 +2,8 @@ import React from "react";
 import "./footer.css";
 import { ReactComponent as Copyright } from "../../assets/copyright.svg";
 const footer = () => {
-  const developedBy = () => {
-    window.open("https://shadowctrl.me", "_self");
-    window.open("https://upwork.com/freelancers/shadowctrl", "_blank");
+  const handleCredits = () => {
+    window.open("https://github.com/AI-Data-Excellence-Club", "_blank");
   };
   return (
     <React.Fragment>
@@ -12,10 +11,10 @@ const footer = () => {
         <p className="copyright">
           Copyrights
           <Copyright className="copyright-icon" />
-          2024-2025 - {"All Rights Reserved."}
+          2025-2026 - {"All Rights Reserved."}
         </p>
         <p className="copyright">
-          Developed & Maintained by <p onClick={developedBy}>shadowctrl</p>
+          Credits <p onClick={handleCredits}>AID-X Club</p>
         </p>
       </div>
     </React.Fragment>

@@ -3,49 +3,33 @@ import "./events.css";
 import ReactGA from "react-ga";
 
 const events = () => {
-  const handleAbstract = () => {
-    ReactGA.event({
-      category: "Button",
-      action: "click",
-      label: `Abstract Reference Download`,
-    });
-    window.open("/docs/Abstract_Reference_Hackathon.pdf");
-  };
   useEffect(() => {
-    document.title = "Stages";
+    document.title = "Club Activities";
   });
   const handleStage = (stage) => {
     ReactGA.event({
       category: "Button",
       action: "click",
-      label: `Events Stage-${stage}`,
+      label: `Activity-${stage}`,
     });
     if (stage == "1") {
       document.querySelector("#line-progress").style.width = "0%";
-      document
-        .querySelectorAll(".section-content")
-        .forEach((stage) => stage.classList.remove("active"));
+      document.querySelectorAll(".section-content").forEach((s) => s.classList.remove("active"));
       document.querySelector(".stage1-content").classList.add("active");
     }
     if (stage == "2") {
-      document.querySelector("#line-progress").style.width = "25%";
-      document
-        .querySelectorAll(".section-content")
-        .forEach((stage) => stage.classList.remove("active"));
+      document.querySelector("#line-progress").style.width = "33%";
+      document.querySelectorAll(".section-content").forEach((s) => s.classList.remove("active"));
       document.querySelector(".stage2-content").classList.add("active");
     }
     if (stage == "3") {
-      document.querySelector("#line-progress").style.width = "50%";
-      document
-        .querySelectorAll(".section-content")
-        .forEach((stage) => stage.classList.remove("active"));
+      document.querySelector("#line-progress").style.width = "66%";
+      document.querySelectorAll(".section-content").forEach((s) => s.classList.remove("active"));
       document.querySelector(".stage3-content").classList.add("active");
     }
     if (stage == "4") {
-      document.querySelector("#line-progress").style.width = "75%";
-      document
-        .querySelectorAll(".section-content")
-        .forEach((stage) => stage.classList.remove("active"));
+      document.querySelector("#line-progress").style.width = "100%";
+      document.querySelectorAll(".section-content").forEach((s) => s.classList.remove("active"));
       document.querySelector(".stage4-content").classList.add("active");
     }
   };
@@ -54,10 +38,10 @@ const events = () => {
       <div className="parent-events">
         <div className="events-progress-bar">
           <ul>
-            <li onClick={() => handleStage("1")}>Stage 1</li>
-            <li onClick={() => handleStage("2")}>Stage 2</li>
-            <li onClick={() => handleStage("3")}>Stage 3</li>
-            <li onClick={() => handleStage("4")}>Stage 4</li>
+            <li onClick={() => handleStage("1")}>Workshops</li>
+            <li onClick={() => handleStage("2")}>Competitions</li>
+            <li onClick={() => handleStage("3")}>Projects</li>
+            <li onClick={() => handleStage("4")}>Certifications</li>
           </ul>
           <div id="line">
             <div id="line-progress"></div>
@@ -67,101 +51,54 @@ const events = () => {
         <div className="events-container">
           <div className="section-content stage1-content active">
             <div className="section-format">
-              {" "}
-              <h1>Registration</h1>
+              <h1>Technical Workshops & Bootcamps</h1>
               <p>
-                🔗 Scan the QR in the poster or search www.hackatank.tech and
-                register for the event.
-                <br /> <br />
-                1️⃣ It will redirect you to the respective Google forms. Kindly
-                fill in the requested details.
-                <br /> <br />
-                2️⃣Our registration team will contact you further upon
-                registration.
-                <br /> <br />
-                3️⃣For any queries/issues, kindly check the contacts column for
-                Point of Contact (POC).
-                <br /> <br />
-                4️⃣Last date for registration is on or before the 25th of August
-                2023.
-                <br /> <br />
-                5️⃣The first round is free for all the teams that register for
-                the event.
+                 We conduct regular technical workshops covering our seven tech domains.<br /> <br />
+                 Topics include AI/ML, Data Science, Web Development, Cloud & DevOps, Cybersecurity, IoT, and UI/UX Design.<br /> <br />
+                 Workshops are led by experienced coordinators and industry professionals.<br /> <br />
+                 Hands-on bootcamps provide practical experience with real-world tools and technologies.<br /> <br />
+                 Check our Instagram @aid_x.club for upcoming workshop announcements!
               </p>
             </div>
           </div>
+
           <div className="section-content stage2-content">
             <div className="section-format">
-              <h1>
-                Abstract Submission
-                <span className="stage2-reference" onClick={handleAbstract}>
-                  <span>click here to downlaod -</span>
-                  ABSTRACT SUBMISSION REFERENCE
-                </span>
-              </h1>
+              <h1>Coding Competitions & Challenges</h1>
               <p>
-                📋 The problem statements are available on the home page, and it
-                is provided at the bottom of this page as a PDF for downloading.
-                <br /> <br />
-                📥 We also accept your own/inspired problem statements for
-                review. Kindly submit it as an abstract and the registration
-                team will contact you.
-                <br /> <br />
-                📝 The abstract format is given at the top right of this page as
-                a PDF for downloading. Kindly download and use it for reference.
-                <br /> <br />
-                📄 Abstract of the project must be submitted only in PDF file
-                format.
-                <br /> <br />⏰ The last date for abstract submission is on or
-                before the 28th of August 2023.
+                 We organize regular coding competitions to test and improve your skills.<br /> <br />
+                 Competitions cover various difficulty levels - beginner to advanced.<br /> <br />
+                 Problems are based on real-world scenarios and industry requirements.<br /> <br />
+                 Winners are recognized and awarded certificates of achievement.<br /> <br />
+                 Team and individual competitions help build community and friendly competition!
               </p>
             </div>
           </div>
+
           <div className="section-content stage3-content">
             <div className="section-format">
-              <h1>Scrutinization</h1>
+              <h1>Project Showcases & Guest Lectures</h1>
               <p>
-                🔍 The teams will be shortlisted by the judging panel on various
-                criteria which includes the scope of the project, execution
-                ideology, etc.
-                <br /> <br />
-                📢 The scrutinized/shortlisted teams for the final round of
-                "HACK-A-TANK" will be announced on the 30th of August 2023.
-                <br /> <br />
-                💰 The Shortlisted team should proceed with their registration
-                by completing the payment of Rs 999/- per team on or before 3rd
-                September 2023.
-                <br /> <br />
-                🔄 After the completion of payment, the registration team will
-                assess you for the further procedures of the final round.
+                 Members showcase their projects and learn from each other's work.<br /> <br />
+                 Project demos help you understand practical applications of theoretical concepts.<br /> <br />
+                 Industry experts conduct guest lectures sharing insights and best practices.<br /> <br />
+                 Learn about current industry trends and career opportunities.<br /> <br />
+                 Q&A sessions provide direct interaction with professionals!
               </p>
             </div>
           </div>
+
           <div className="section-content stage4-content">
             <div className="section-format">
-              <h1>The Grand Finale</h1>
+              <h1>Certificates & Recognition</h1>
               <p>
-                🎉 The commencement of the inaugural function is scheduled at
-                10:00 am on the 8th of September 2023.
-                <br /> <br />
-                ⏱️ The "HACK-A-TANK" event will begin at 1:00 pm on the 8th of
-                September 2023 and will wrap up at 1:00 pm on the 9th of
-                September 2023.
-                <br /> <br />
-                🍔🍕 The lunch and dinner for the 8th of September will be
-                provided by the organizing committee to the participants.
-                <br /> <br />
-                🍳🍔 The breakfast and lunch for the 9th of September will be
-                provided by the organizing committee to the participants.
-                <br /> <br />
-                🍪 Refreshments will be provided to all the participating teams
-                at all feasible times by the organizing committee.
-                <br /> <br />
-                🏆 The event will be concluded with the announcement of the cash
-                prize winners of the "HACK-A-TANK" event on the 9th of September
-                2023 by 4:00 pm.
+                 Members who actively participate receive certificates of completion.<br /> <br />
+                 Recognition programs highlight top contributors and project builders.<br /> <br />
+                 Certificates include dates, topics, and participation details.<br /> <br />
+                 Active members and coordinators get annual recognition awards.<br /> <br />
+                 Building a portfolio? Our certificates showcase your technical growth!
               </p>
-            </div>{" "}
+            </div>
           </div>
         </div>
       </div>
