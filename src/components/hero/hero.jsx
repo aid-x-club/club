@@ -1,5 +1,6 @@
 import "./hero.css";
 import React, { useEffect, useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import ReactGA from "react-ga";
 import KeyboardDoubleArrowRightSharpIcon from "@mui/icons-material/KeyboardDoubleArrowRightSharp";
 import VanillaTilt from "vanilla-tilt";
@@ -8,6 +9,7 @@ import Schedule from "./schedule";
 import Sponsors from "./sponsors";
 import CoreSkillsModal from "./CoreSkillsModal";
 import { Footer } from "../";
+import { useAuth } from "../../context/AuthContext";
 import { ReactComponent as Calender } from "../../assets/calender.svg";
 import { ReactComponent as Info } from "../../assets/info.svg";
 import { ReactComponent as Location } from "../../assets/location.svg";
@@ -15,15 +17,26 @@ import { ReactComponent as ArrowRightWhite } from "../../assets/arrow-right-whit
 import { ReactComponent as ArrowRightBlack } from "../../assets/arrow-right-black.svg";
 
 const hero = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const [showCoreSkillsModal, setShowCoreSkillsModal] = useState(false);
 
-  const handleRegisterClick = () => {
+  const handleRegisterClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log("JOIN CLUB clicked - isAuthenticated:", isAuthenticated);
     ReactGA.event({
       category: "Button",
       action: "click",
-      label: "register",
+      label: "join_club",
     });
-    window.open("mailto:aidx.club@gmail.com");
+    if (isAuthenticated) {
+      console.log("Navigating to /events");
+      navigate("/events");
+    } else {
+      console.log("Navigating to /login");
+      navigate("/login");
+    }
   };
   const handleCardClicks = (card) => {
     ReactGA.event({
@@ -109,9 +122,9 @@ const hero = () => {
               </p>
             </div>
 
-            <div className="register_now" onClick={handleRegisterClick}>
+            <div className="register_now" onClick={handleRegisterClick} style={{ cursor: 'pointer' }}>
               <div>
-                <a>JOIN CLUB </a>
+                <span>JOIN CLUB </span>
               </div>
               <div>
                 {" "}
@@ -162,7 +175,13 @@ const hero = () => {
               >
                 Activities <ArrowRightWhite className="arrow-right-icon" />
               </p>
-              <p className="text3" onClick={handleComingSoon}>
+              <p className="text3" onClick={() => {
+                if (isAuthenticated) {
+                  navigate("/events");
+                } else {
+                  navigate("/login");
+                }
+              }}>
                 Events <ArrowRightWhite className="arrow-right-icon" />
               </p>
             </div>

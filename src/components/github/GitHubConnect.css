@@ -1,0 +1,129 @@
+.github-connect {
+  margin: 20px 0;
+}
+
+.btn-github-connect {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #1f6feb 0%, #388bfd 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-github-connect:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(31, 111, 235, 0.3);
+}
+
+.btn-github-connect:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.github-connected {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background: linear-gradient(135deg, rgba(31, 111, 235, 0.1) 0%, rgba(56, 139, 253, 0.05) 100%);
+  border: 1px solid rgba(31, 111, 235, 0.3);
+  border-radius: 8px;
+  position: relative;
+}
+
+.github-user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.github-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid #1f6feb;
+}
+
+.github-user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.github-username {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1f6feb;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.github-name {
+  font-size: 13px;
+  color: #666;
+  margin: 0;
+}
+
+.btn-manage {
+  padding: 8px 16px;
+  background: transparent;
+  color: #1f6feb;
+  border: 1px solid #1f6feb;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-manage:hover {
+  background: rgba(31, 111, 235, 0.1);
+}
+
+.btn-disconnect {
+  padding: 8px 16px;
+  background: #ff3b30;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-disconnect:hover {
+  background: #ff2b20;
+  box-shadow: 0 5px 15px rgba(255, 59, 48, 0.3);
+}
+
+.error-message {
+  color: #ff3b30;
+  font-size: 14px;
+  margin-top: 10px;
+  padding: 10px;
+  background: rgba(255, 59, 48, 0.1);
+  border-radius: 4px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .github-connected {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .btn-manage {
+    width: 100%;
+  }
+}

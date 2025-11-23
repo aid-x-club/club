@@ -1,0 +1,351 @@
+.signup-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background: url('/images/bg6.webp') center/cover no-repeat fixed;
+  position: relative;
+  overflow: hidden;
+  padding: 2vw;
+}
+
+.signup-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(10, 10, 10, 0.5) 0%, rgba(26, 26, 26, 0.5) 100%);
+  z-index: 0;
+}
+
+/* Background Animation */
+.signup-background-animation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.45;
+  z-index: 2;
+  pointer-events: none;
+  display: flex;
+  filter: brightness(1.2) saturate(1.1);
+}
+
+.accent-gradient {
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 500px;
+  height: 500px;
+  background: linear-gradient(135deg, #ff007b 0%, #d500ed 100%);
+  border-radius: 50%;
+  opacity: 0.1;
+  filter: blur(100px);
+  z-index: 0;
+}
+
+.signup-box {
+  background: rgba(255, 255, 255, 0);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 2vw;
+  padding: 4vw;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  z-index: 20;
+  animation: slideUp 0.6s ease-out;
+  margin-right: 3vw;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.signup-header {
+  text-align: center;
+  margin-bottom: 1.5vw;
+}
+
+.signup-header h1 {
+  font-size: 2.5vw;
+  font-weight: 800;
+  background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  font-family: 'russo one', sans-serif;
+  letter-spacing: 1px;
+}
+
+.signup-header p {
+  font-size: 1.1vw;
+  color: #e0e8f0;
+  margin: 0.5vw 0 0 0;
+  font-weight: 500;
+}
+
+/* Lottie Animation */
+.signup-animation {
+  width: 100%;
+  height: 0px;
+  margin-bottom: 0vw;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Alerts */
+.alert {
+  padding: 1.2vw;
+  border-radius: 1vw;
+  margin-bottom: 2vw;
+  font-size: 0.95vw;
+  animation: slideDown 0.4s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.alert-error {
+  background-color: rgba(255, 60, 111, 0.15);
+  border: 1px solid rgba(255, 60, 111, 0.3);
+  color: #ff3c6f;
+}
+
+.alert-success {
+  background-color: rgba(0, 200, 150, 0.15);
+  border: 1px solid rgba(0, 200, 150, 0.3);
+  color: #00c896;
+}
+
+/* Form */
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1vw;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5vw;
+}
+
+.form-group label {
+  font-size: 0.95vw;
+  font-weight: 600;
+  color: #e8f0f8;
+  font-family: 'exo', sans-serif;
+}
+
+.form-group input {
+  padding: 1vw 1.2vw;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 0.8vw;
+  font-size: 0.95vw;
+  transition: all 0.3s ease;
+  font-family: 'inter', sans-serif;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #00d4ff;
+  box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.15);
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+.form-group input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.form-group small {
+  font-size: 0.8vw;
+  color: #a0b0c0;
+  margin-top: 0.2vw;
+}
+
+/* Verified Badge */
+.verified-badge {
+  background: linear-gradient(135deg, rgba(0, 200, 150, 0.15), rgba(0, 200, 150, 0.05));
+  border: 1px solid rgba(0, 200, 150, 0.3);
+  padding: 1vw 1.2vw;
+  border-radius: 0.8vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1vw;
+  font-size: 0.95vw;
+  color: #00c896;
+  font-weight: 600;
+}
+
+.btn-change {
+  background: transparent;
+  border: 1px solid rgba(0, 200, 150, 0.5);
+  color: #00c896;
+  padding: 0.4vw 0.8vw;
+  border-radius: 0.5vw;
+  font-size: 0.8vw;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 600;
+}
+
+.btn-change:hover {
+  background: rgba(0, 200, 150, 0.1);
+  border-color: #00c896;
+}
+
+/* Student Details */
+.student-details {
+  background: #f9f9f9;
+  border: 1px solid #f0f0f0;
+  border-radius: 0.8vw;
+  padding: 1.2vw;
+  margin-bottom: 1vw;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.6vw 0;
+  font-size: 0.95vw;
+}
+
+.detail-row .label {
+  color: #a0b0c0;
+  font-weight: 600;
+}
+
+.detail-row .value {
+  color: #e8f0f8;
+  font-weight: 700;
+}
+
+/* Buttons */
+.btn-primary {
+  padding: 1.2vw 2vw;
+  background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+  color: white;
+  border: none;
+  border-radius: 0.8vw;
+  font-size: 1vw;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'exo', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Form Footer */
+.form-footer {
+  text-align: center;
+  font-size: 0.9vw;
+  color: #b8c9d9;
+  margin: 0;
+}
+
+.form-footer a {
+  color: #00d4ff;
+  text-decoration: none;
+  font-weight: 700;
+  transition: color 0.2s;
+}
+
+.form-footer a:hover {
+  color: #00e6ff;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .signup-container {
+    justify-content: center;
+  }
+
+  .signup-box {
+    margin-right: 0;
+  }
+
+  .signup-container {
+    padding: 3vw;
+  }
+
+  .signup-box {
+    padding: 6vw;
+    border-radius: 3vw;
+  }
+
+  .signup-header h1 {
+    font-size: 6vw;
+  }
+
+  .signup-header p {
+    font-size: 3vw;
+  }
+
+  .form-group label {
+    font-size: 3.5vw;
+  }
+
+  .form-group input {
+    padding: 3vw;
+    font-size: 3vw;
+    border-radius: 2vw;
+  }
+
+  .btn-primary {
+    padding: 3vw;
+    font-size: 3vw;
+    border-radius: 1.5vw;
+  }
+
+  .alert {
+    font-size: 2.5vw;
+    padding: 2.5vw;
+  }
+
+  .form-footer {
+    font-size: 2.5vw;
+  }
+
+  .verified-badge {
+    flex-direction: column;
+    gap: 2vw;
+    padding: 2.5vw;
+  }
+}

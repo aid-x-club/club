@@ -1,5 +1,6 @@
 import React from "react";
 import "./navbar.css";
+import { useNavigate } from "react-router-dom";
 import {
   InstagramOutlined,
   InstagramFilled,
@@ -8,8 +9,11 @@ import {
 import { SocialIcon } from "react-social-icons";
 import { ReactComponent as Grid } from "../../assets/navgrid.svg";
 import ReactGA from "react-ga";
+import { useAuth } from "../../context/AuthContext";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const handleInsta = () => {
     ReactGA.event({
       category: "Social Icon",
@@ -48,9 +52,13 @@ const Navbar = () => {
     ReactGA.event({
       category: "Button",
       action: "click",
-      label: "register",
+      label: "join_club_navbar",
     });
-    window.open("mailto:aidx.club@gmail.com");
+    if (isAuthenticated) {
+      navigate("/events");
+    } else {
+      navigate("/login");
+    }
   };
   const handleScroll = (id) => {
     ReactGA.event({

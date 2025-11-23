@@ -14,7 +14,7 @@ const footer = () => {
           2025-2026 - {"All Rights Reserved."}
         </p>
         <p className="copyright">
-          Credits <p onClick={handleCredits}>AID-X Club</p>
+          Credits <span onClick={handleCredits} style={{cursor: 'pointer', textDecoration: 'underline'}}>AID-X Club</span>
         </p>
       </div>
     </React.Fragment>
