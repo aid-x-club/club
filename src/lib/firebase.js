@@ -1,14 +1,15 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
+
 const firebaseConfig = {
-  apiKey: "AIzaSyBOrQXy8UA0Qm2bwpXngf54P85gVc-pChM",
-  authDomain: "aidx-club.firebaseapp.com",
-  projectId: "aidx-club",
-  storageBucket: "aidx-club.appspot.com",
-  messagingSenderId: "986553465308",
-  appId: "1:986553465308:web:8b8a8b3ced07911e00f719",
-  measurementId: "G-2677BE5L48",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 export const app = initializeApp(firebaseConfig);
