@@ -58,6 +58,7 @@ export function ProfileDropdown({
     data = SAMPLE_PROFILE_DATA,
     className,
     onLogout,
+    setActiveTab,
     ...props
 }) {
     const navigate = useNavigate();
@@ -76,33 +77,46 @@ export function ProfileDropdown({
         }
     };
 
+    const handleProfileClick = () => {
+        if (setActiveTab) {
+            setActiveTab('profile');
+        } else {
+            handleNavigation('/student/dashboard', '/dashboard');
+        }
+    };
+
+    const handleRankClick = () => {
+        if (setActiveTab) {
+            setActiveTab('rank');
+        } else {
+            handleNavigation('/student/dashboard', '/dashboard');
+        }
+    };
+
+    const handleSettingsClick = () => {
+        if (setActiveTab) {
+            setActiveTab('settings');
+        } else {
+            handleNavigation('/student/dashboard', '/dashboard');
+        }
+    };
+
     const menuItems = [
         {
             label: "My Profile",
-            onClick: () => handleNavigation('/profile', '/dashboard'),
+            onClick: handleProfileClick,
             icon: <User className="w-4 h-4" />,
         },
         {
             label: "Rank",
             value: data.rank || "Silver",
-            onClick: () => handleNavigation('/leaderboard', '/dashboard'),
+            onClick: handleRankClick,
             icon: <Gemini className="w-4 h-4" />,
         },
         {
-            label: "Membership",
-            value: data.subscription,
-            onClick: () => handleNavigation('/membership', '/dashboard'),
-            icon: <CreditCard className="w-4 h-4" />,
-        },
-        {
             label: "Account Settings",
-            onClick: () => handleNavigation('/settings', '/dashboard'),
+            onClick: handleSettingsClick,
             icon: <Settings className="w-4 h-4" />,
-        },
-        {
-            label: "Club Guidelines",
-            onClick: () => handleNavigation('/guidelines', '/dashboard'),
-            icon: <FileText className="w-4 h-4" />,
         },
     ];
 
@@ -116,10 +130,10 @@ export function ProfileDropdown({
                             className="flex items-center gap-2 p-2 rounded-xl bg-white/10 dark:bg-zinc-900/10 border border-zinc-200/60 dark:border-zinc-800/60 hover:border-zinc-300/80 dark:hover:border-zinc-700/80 hover:bg-white/20 dark:hover:bg-zinc-800/20 hover:shadow-sm transition-all duration-200 focus:outline-none"
                         >
                             <div className="text-left flex-1">
-                                <div className="text-xs font-medium text-zinc-900 dark:text-zinc-100 tracking-tight leading-tight">
+                                <div className="text-xs font-medium text-white tracking-tight leading-tight">
                                     {data.name}
                                 </div>
-                                <div className="text-xs text-zinc-500 dark:text-zinc-400 tracking-tight leading-tight">
+                                <div className="text-xs text-gray-300 tracking-tight leading-tight">
                                     {data.email}
                                 </div>
                             </div>
@@ -172,7 +186,7 @@ export function ProfileDropdown({
                     <DropdownMenuContent
                         align="end"
                         sideOffset={4}
-                        className="w-56 p-2 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-sm border border-zinc-200/60 dark:border-zinc-800/60 rounded-2xl shadow-xl shadow-zinc-900/5 dark:shadow-zinc-950/20 
+                        className="w-56 p-2 bg-gray-900/95 backdrop-blur-sm border border-gray-700/60 rounded-2xl shadow-xl shadow-black/20
                     data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-top-right"
                     >
                         <div className="space-y-1">
@@ -181,11 +195,11 @@ export function ProfileDropdown({
                                     <button
                                         type="button"
                                         onClick={item.onClick}
-                                        className="flex items-center p-3 hover:bg-zinc-100/80 dark:hover:bg-zinc-800/60 rounded-xl transition-all duration-200 cursor-pointer group hover:shadow-sm border border-transparent hover:border-zinc-200/50 dark:hover:border-zinc-700/50 w-full text-left"
+                                        className="flex items-center p-3 hover:bg-gray-800/60 rounded-xl transition-all duration-200 cursor-pointer group hover:shadow-sm border border-transparent hover:border-gray-600/50 w-full text-left"
                                     >
                                         <div className="flex items-center gap-2 flex-1">
                                             {item.icon}
-                                            <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100 tracking-tight leading-tight whitespace-nowrap group-hover:text-zinc-950 dark:group-hover:text-zinc-50 transition-colors">
+                                            <span className="text-sm font-medium text-white tracking-tight leading-tight whitespace-nowrap group-hover:text-gray-200 transition-colors">
                                                 {item.label}
                                             </span>
                                         </div>
@@ -195,8 +209,8 @@ export function ProfileDropdown({
                                                     className={cn(
                                                         "text-xs font-medium rounded-md py-1 px-2 tracking-tight",
                                                         item.label === "Model"
-                                                            ? "text-blue-600 bg-blue-50 dark:text-blue-400 dark:bg-blue-500/10 border border-blue-500/10"
-                                                            : "text-purple-600 bg-purple-50 dark:text-purple-400 dark:bg-purple-500/10 border border-purple-500/10"
+                                                            ? "text-blue-400 bg-blue-500/20 border border-blue-500/30"
+                                                            : "text-purple-400 bg-purple-500/20 border border-purple-500/30"
                                                     )}
                                                 >
                                                     {item.value}
@@ -208,7 +222,7 @@ export function ProfileDropdown({
                             ))}
                         </div>
 
-                        <DropdownMenuSeparator className="my-3 bg-gradient-to-r from-transparent via-zinc-200 to-transparent dark:via-zinc-800" />
+                        <DropdownMenuSeparator className="my-3 bg-gradient-to-r from-transparent via-gray-600 to-transparent" />
 
                         <DropdownMenuItem asChild>
                             <button

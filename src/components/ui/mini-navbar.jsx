@@ -60,7 +60,7 @@ export function Navbar({ activeTab, setActiveTab, onLogout }) {
     { label: 'Overview', key: 'overview' },
     { label: 'Projects', key: 'projects' },
     { label: 'Events', key: 'events' },
-    { label: 'Leaderboard', key: 'leaderboard' },
+    { label: 'Profile', key: 'profile' },
   ];
 
   

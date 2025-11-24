@@ -1,0 +1,219 @@
+/* Coding Background Animation */
+.coding-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Code Particles */
+.code-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.code-particle {
+  position: absolute;
+  color: rgba(102, 126, 234, 0.6);
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-weight: 500;
+  white-space: nowrap;
+  animation: floatUp linear infinite;
+  text-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(100vh) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Binary Rain */
+.binary-rain {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.binary-column {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  animation: binaryFall linear infinite;
+}
+
+.binary-digit {
+  color: rgba(52, 211, 153, 0.4);
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.2;
+  animation: binaryGlow 2s ease-in-out infinite;
+}
+
+@keyframes binaryFall {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+@keyframes binaryGlow {
+  0%, 100% {
+    opacity: 0.3;
+    text-shadow: 0 0 5px rgba(52, 211, 153, 0.2);
+  }
+  50% {
+    opacity: 0.8;
+    text-shadow: 0 0 15px rgba(52, 211, 153, 0.5);
+  }
+}
+
+/* Code Lines */
+.code-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.code-line {
+  position: absolute;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.1) 20%, 
+    rgba(255, 255, 255, 0.3) 50%, 
+    rgba(255, 255, 255, 0.1) 80%, 
+    transparent 100%
+  );
+  animation: scanLine 3s ease-in-out infinite;
+}
+
+@keyframes scanLine {
+  0%, 100% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(100%);
+    opacity: 1;
+  }
+}
+
+/* Glitch Effect */
+.coding-background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(255, 255, 255, 0.01) 2px,
+    rgba(255, 255, 255, 0.01) 4px
+  );
+  animation: glitch 4s steps(1) infinite;
+  pointer-events: none;
+}
+
+@keyframes glitch {
+  0%, 90%, 100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  92% {
+    transform: translate(-2px, 2px);
+    opacity: 0.8;
+  }
+  94% {
+    transform: translate(2px, -2px);
+    opacity: 0.9;
+  }
+  96% {
+    transform: translate(-1px, 1px);
+    opacity: 0.85;
+  }
+}
+
+/* Pulse Effect */
+.coding-background::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle,
+    rgba(102, 126, 234, 0.05) 0%,
+    rgba(118, 75, 162, 0.03) 30%,
+    transparent 70%
+  );
+  transform: translate(-50%, -50%);
+  animation: pulse 8s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .code-particle {
+    font-size: 10px !important;
+  }
+  
+  .binary-digit {
+    font-size: 10px;
+  }
+  
+  .code-line {
+    height: 0.5px;
+  }
+}
+
+/* Dark mode variations */
+@media (prefers-color-scheme: dark) {
+  .code-particle {
+    color: rgba(139, 92, 246, 0.6);
+    text-shadow: 0 0 10px rgba(139, 92, 246, 0.3);
+  }
+  
+  .binary-digit {
+    color: rgba(74, 222, 128, 0.4);
+    text-shadow: 0 0 5px rgba(74, 222, 128, 0.2);
+  }
+}

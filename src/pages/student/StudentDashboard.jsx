@@ -5,13 +5,14 @@ import axios from 'axios';
 import ShootingStars from '../../components/ui/ShootingStars';
 import Meteors from '../../components/ui/Meteors';
 import { MenuContainer, MenuItem } from '../../components/ui/fluid-menu';
-import { TextRotate } from '../../components/ui/text-rotate';
+import SimpleTextRotate from "../../components/ui/simple-text-rotate";
+import { NotFound } from "../../components/ui/ghost-404-page";
+import { NotFoundPage } from "../../components/ui/404-page-not-found";
 import { Navbar } from '../../components/ui/mini-navbar';
 import { ProfileDropdown } from '../../components/ui/profile-dropdown';
-import ErrorBoundary from '../../components/ui/error-boundary';
-import ErrorFallback from '../../components/ui/error-fallback';
 import { handleAsyncError } from '../../utils/error-handler';
-import { Menu as MenuIcon, X, Briefcase, Calendar, Star, Github, Plus, GitBranch, Users, ExternalLink, CheckCircle, AlertCircle, ArrowLeft, Home } from 'lucide-react';
+import { Menu as MenuIcon, X, Briefcase, Calendar, Star, Github, Plus, GitBranch, Users, ExternalLink, CheckCircle, AlertCircle, ArrowLeft, Home, BookOpen } from 'lucide-react';
+import LearnAndBuild from '../../components/apps/LearnAndBuild';
 import './StudentDashboard.css';
 
 const StudentDashboard = () => {
@@ -30,6 +31,7 @@ const StudentDashboard = () => {
   const [projects, setProjects] = useState([]);
   const [events, setEvents] = useState([]);
   const [githubRepos, setGithubRepos] = useState([]);
+  const [activeApp, setActiveApp] = useState(null);
 
   useEffect(() => {
     fetchAllData();
@@ -38,36 +40,88 @@ const StudentDashboard = () => {
   const fetchAllData = async () => {
     try {
       setLoading(true);
-      const headers = { Authorization: `Bearer ${token}` };
 
-      // Check GitHub connection
-      const isConnected = localStorage.getItem('githubConnected') === 'true';
+      // Check GitHub connection - check both localStorage and actual user data
+      const localStorageConnected = localStorage.getItem('githubConnected') === 'true';
+      const hasGithubData = user?.githubUsername || user?.githubId;
+      // For testing - always show 404 page when GitHub isn't connected
+      const isConnected = localStorageConnected && hasGithubData;
+      
+      console.log('GitHub connection check:', {
+        localStorage: localStorageConnected,
+        hasGithubData: !!hasGithubData,
+        user: user,
+        finalResult: isConnected
+      });
+      
+      // Set GitHub connection status naturally
       setGithubConnected(isConnected);
 
-      // Fetch user projects
-      const projectsRes = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/projects/my-projects`,
-        { headers }
-      ).catch(() => ({ data: [] }));
+      // Only fetch if API URL is available and token exists
+      const apiUrl = import.meta.env.VITE_API_URL;
+      if (apiUrl && token) {
+        try {
+          const headers = { Authorization: `Bearer ${token}` };
 
-      // Fetch user events
-      const eventsRes = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/events/my-events`,
-        { headers }
-      ).catch(() => ({ data: [] }));
+          // Fetch user projects with timeout
+          const projectsRes = await Promise.race([
+            axios.get(`${apiUrl}/api/projects/my-projects`, { headers }),
+            new Promise(resolve => setTimeout(() => resolve({ data: [] }), 3000))
+          ]);
 
-      setProjects(projectsRes.data || []);
-      setEvents(eventsRes.data || []);
+          // Fetch user events with timeout
+          const eventsRes = await Promise.race([
+            axios.get(`${apiUrl}/api/events/my-events`, { headers }),
+            new Promise(resolve => setTimeout(() => resolve({ data: [] }), 3000))
+          ]);
 
-      setUserStats({
-        projects: projectsRes.data?.length || 0,
-        aidxProjects: projectsRes.data?.filter(p => p.type === 'aidx')?.length || 0,
-        importedProjects: projectsRes.data?.filter(p => p.type === 'imported')?.length || 0,
-        events: eventsRes.data?.length || 0,
-        contributions: (projectsRes.data?.length || 0) + (eventsRes.data?.length || 0)
-      });
+          setProjects(projectsRes.data || []);
+          setEvents(eventsRes.data || []);
+
+          setUserStats({
+            projects: projectsRes.data?.length || 0,
+            aidxProjects: projectsRes.data?.filter(p => p.type === 'aidx')?.length || 0,
+            importedProjects: projectsRes.data?.filter(p => p.type === 'imported')?.length || 0,
+            events: eventsRes.data?.length || 0,
+            contributions: (projectsRes.data?.length || 0) + (eventsRes.data?.length || 0)
+          });
+        } catch (apiError) {
+          // Silently handle API errors - set empty data
+          console.log('Backend not available, using empty data');
+          setProjects([]);
+          setEvents([]);
+          setUserStats({
+            projects: 0,
+            aidxProjects: 0,
+            importedProjects: 0,
+            events: 0,
+            contributions: 0
+          });
+        }
+      } else {
+        // No API URL or token - set empty data
+        setProjects([]);
+        setEvents([]);
+        setUserStats({
+          projects: 0,
+          aidxProjects: 0,
+          importedProjects: 0,
+          events: 0,
+          contributions: 0
+        });
+      }
     } catch (err) {
-      console.error('Failed to fetch dashboard data:', handleAsyncError(err));
+      console.error('Dashboard initialization error:', err);
+      // Set empty data on any error
+      setProjects([]);
+      setEvents([]);
+      setUserStats({
+        projects: 0,
+        aidxProjects: 0,
+        importedProjects: 0,
+        events: 0,
+        contributions: 0
+      });
     } finally {
       setLoading(false);
     }
@@ -77,11 +131,52 @@ const StudentDashboard = () => {
     navigate('/github/login');
   };
 
-  const handleDisconnectGitHub = () => {
-    localStorage.removeItem('githubUser');
-    localStorage.removeItem('githubConnected');
-    localStorage.removeItem('githubAccessToken');
-    setGithubConnected(false);
+  const handleDisconnectGitHub = async () => {
+    try {
+      await axios.post('/api/github/disconnect', {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      // Clear GitHub data
+      localStorage.removeItem('githubConnected');
+      localStorage.removeItem('githubUsername');
+      localStorage.removeItem('githubAvatar');
+      localStorage.removeItem('githubToken');
+      
+      setGithubConnected(false);
+      setGithubRepos([]);
+      setUserStats(prev => ({ ...prev, aidxProjects: 0, importedProjects: 0 }));
+      
+      alert('GitHub disconnected successfully');
+    } catch (error) {
+      console.error('Error disconnecting GitHub:', error);
+      alert('Failed to disconnect GitHub');
+    }
+  };
+
+  const handleAppClick = (appName) => {
+    setActiveApp(appName);
+  };
+
+  const handleCloseApp = () => {
+    setActiveApp(null);
+  };
+
+  const renderActiveApp = () => {
+    if (!activeApp) return null;
+
+    switch (activeApp) {
+      case 'Learn & Build':
+        return (
+          <LearnAndBuild 
+            onClose={handleCloseApp} 
+            user={user} 
+            isAdmin={user?.role === 'admin' || user?.role === 'coordinator'}
+          />
+        );
+      default:
+        return null;
+    }
   };
 
   const handleLogout = () => {
@@ -98,13 +193,18 @@ const StudentDashboard = () => {
   };
 
   if (!user) {
-    return <div className="dashboard-loading">Loading...</div>;
+    console.log('No user found, showing loading');
+    return <div className="dashboard-loading">Loading user data...</div>;
   }
 
+  if (loading) {
+    console.log('Dashboard is loading');
+    return <div className="dashboard-loading">Loading dashboard...</div>;
+  }
+
+  console.log('Rendering dashboard with user:', user?.fullName);
   return (
-    <ErrorFallback>
-      <ErrorBoundary>
-        <div className="student-dashboard">
+    <div className="student-dashboard">
       {/* Mini Navigation Bar */}
       <Navbar 
         activeTab={activeTab}
@@ -116,6 +216,7 @@ const StudentDashboard = () => {
       <aside className="stats-sidebar">
         <ProfileDropdown 
           onLogout={handleLogout}
+          setActiveTab={setActiveTab}
           data={{
             name: user?.fullName || 'AID-X Member',
             email: localStorage.getItem('githubUsername') || 'github_username',
@@ -132,147 +233,129 @@ const StudentDashboard = () => {
           {/* ===== OVERVIEW TAB ===== */}
           {activeTab === 'overview' && (
             <div className="overview-section">
-              {/* Main content goes here */}
+              {/* Always show apps regardless of GitHub connection */}
               <div className="welcome-message">
                 <h1>Welcome back, {user.fullName}!</h1>
                 <p>
-                  <TextRotate 
+                  <SimpleTextRotate 
                     texts={[
                       "What would you like to work on today?",
                       "Ready to innovate with AID-X Club?",
                       "Let's build something amazing together!",
                       "Explore projects and collaborate with peers",
-                      "Join our tech community and grow your skills",
-                      "Discover hackathons and coding events",
-                      "Connect with fellow developers and innovators"
+                      "Discover new opportunities and expand your skills",
+                      "Connect with talented developers and innovators"
                     ]}
                     rotationInterval={3000}
-                    staggerDuration={0.03}
-                    mainClassName="text-lg"
-                    elementLevelClassName="inline-block"
-                  />
+                    className="text-xl text-gray-300"
+                  />  
                 </p>
               </div>
-
-              {/* GitHub Connection Prompt */}
-              {!githubConnected ? (
-                <div className="github-prompt-card">
-                  <div className="prompt-icon">
-                    <Github size={40} />
-                  </div>
-                  <div className="prompt-content">
-                    <h2>✅ Step 1: Connect GitHub</h2>
-                    <p>Connect your GitHub account to create and manage projects. Until this is done, some actions remain locked.</p>
-                    <button 
-                      onClick={handleGitHubConnect}
-                      className="btn btn-primary"
-                    >
-                      <Github size={18} />
-                      Connect GitHub
-                    </button>
-                  </div>
+              
+              {/* Mac-style App Drawer */}
+              <div className="mac-app-drawer">
+                <div className="drawer-header">
+                  <h3 className="drawer-title">Workspace</h3>
                 </div>
-              ) : (
-                <>
-                  {/* GitHub Connected Status */}
-                  <div className="github-status-card">
-                    <div className="status-header">
-                      <div className="status-badge">
-                        <CheckCircle size={24} />
-                        <span>GitHub Connected ✅</span>
-                      </div>
-                      <button 
-                        onClick={handleDisconnectGitHub}
-                        className="btn btn-secondary-small"
-                      >
-                        Disconnect
-                      </button>
+                
+                <div className="apps-container">
+                  {/* Row 1 */}
+                  <div className="app-item" onClick={() => handleAppClick('Learn & Build')}>
+                    <div className="app-icon-mac">
+                      <img src="/icons/Learn & Build.png" alt="Learn & Build" />
                     </div>
-                    <div className="github-info">
-                      <p><strong>GitHub Username:</strong> {localStorage.getItem('githubUsername') || 'Connected'}</p>
+                    <span className="app-name">Learn & Build</span>
+                  </div>
+                  
+                  <div className="app-item">
+                    <div className="app-icon-mac">
+                      <img src="/icons/My Projects.png" alt="My Projects" />
                     </div>
+                    <span className="app-name">My Projects</span>
                   </div>
-
-                  {/* Import GitHub Projects Section */}
-                  <div className="import-projects-card">
-                    <div className="section-header">
-                      <h3>📦 Import your GitHub Projects</h3>
-                      <p>Select which repos you want to link to the portal</p>
+                  
+                  <div className="app-item">
+                    <div className="app-icon-mac">
+                      <img src="/icons/Deployment Hub.png" alt="Deployment Hub" />
                     </div>
-                    <div className="repo-list">
-                      <p className="placeholder">Your GitHub repositories will appear here</p>
+                    <span className="app-name">Deployment Hub</span>
+                  </div>
+                  
+                  <div className="app-item">
+                    <div className="app-icon-mac">
+                      <img src="/icons/Team Workspace.png" alt="Team Workspace" />
                     </div>
+                    <span className="app-name">Team Workspace</span>
                   </div>
-                </>
-              )}
-
-              {/* Summary Cards */}
-              <div className="summary-cards">
-                <div className="summary-card">
-                  <div className="card-icon projects-icon">
-                    <Briefcase size={32} />
+                  
+                  {/* Row 2 */}
+                  <div className="app-item">
+                    <div className="app-icon-mac">
+                      <img src="/icons/Events & Workshops.png" alt="Events & Workshops" />
+                    </div>
+                    <span className="app-name">Events & Workshops</span>
                   </div>
-                  <div className="card-content">
-                    <h3>My Projects</h3>
-                    <p className="card-stat">{userStats.projects}</p>
-                    <small className="card-detail">
-                      {userStats.aidxProjects} AID-X • {userStats.importedProjects} Imported
-                    </small>
+                  
+                  <div className="app-item">
+                    <div className="app-icon-mac">
+                      <img src="/icons/Portfolio Profiles.png" alt="Portfolio Profiles" />
+                    </div>
+                    <span className="app-name">Portfolio Profiles</span>
                   </div>
-                </div>
-
-                <div className="summary-card">
-                  <div className="card-icon events-icon">
-                    <Calendar size={32} />
+                  
+                  <div className="app-item">
+                    <div className="app-icon-mac">
+                      <img src="/icons/leaderbaord.png" alt="Leaderboard" />
+                    </div>
+                    <span className="app-name">Leaderboard</span>
                   </div>
-                  <div className="card-content">
-                    <h3>Events</h3>
-                    <p className="card-stat">{userStats.events}</p>
-                    <small className="card-detail">Upcoming & Registered</small>
+                  
+                  <div className="app-item">
+                    <div className="app-icon-mac">
+                      <img src="/icons/Career Path Roadmaps.png" alt="Career Roadmaps" />
+                    </div>
+                    <span className="app-name">Career Roadmaps</span>
                   </div>
-                </div>
-
-                <div className="summary-card">
-                  <div className="card-icon contributions-icon">
-                    <Star size={32} />
+                  
+                  {/* Row 3 */}
+                  <div className="app-item">
+                    <div className="app-icon-mac">
+                      <img src="/icons/AI Help Desk.png" alt="AI Help Desk" />
+                    </div>
+                    <span className="app-name">AI Help Desk</span>
                   </div>
-                  <div className="card-content">
-                    <h3>Achievements</h3>
-                    <p className="card-stat">Future</p>
-                    <small className="card-detail">Badges & Certificates</small>
+                  
+                  <div className="app-item">
+                    <div className="app-icon-mac">
+                      <img src="/icons/Opportunities Hub.png" alt="Opportunities" />
+                    </div>
+                    <span className="app-name">Opportunities</span>
                   </div>
                 </div>
               </div>
+              
+                          </div>
+          )}
 
-              {/* Quick Actions */}
-              <div className="quick-actions">
-                <h3>Quick Actions</h3>
-                <div className="action-buttons">
-                  {githubConnected && (
-                    <>
-                      <button 
-                        onClick={() => navigate('/create-project')}
-                        className="action-btn primary"
-                      >
-                        <Plus size={20} />
-                        Start a New Project
-                      </button>
-                      <button 
-                        onClick={() => setActiveTab('projects')}
-                        className="action-btn"
-                      >
-                        <Briefcase size={20} />
-                        View My Projects
-                      </button>
-                    </>
-                  )}
-                  <button 
-                    onClick={() => setActiveTab('events')}
-                    className="action-btn"
-                  >
-                    <Calendar size={20} />
-                    Browse Events
+          {/* ===== ACTIVE APP MODAL ===== */}
+          {activeApp && (
+            <div className="app-modal-overlay" onClick={handleCloseApp}>
+              <div className="app-modal-container" onClick={(e) => e.stopPropagation()}>
+                <div className="app-modal-header">
+                  <h2 className="app-modal-title">
+                    {activeApp === 'Learn & Build' && (
+                      <>
+                        <BookOpen className="w-5 h-5" />
+                        Learn & Build
+                      </>
+                    )}
+                  </h2>
+                  <button onClick={handleCloseApp} className="app-modal-close">
+                    <X className="w-5 h-5" />
                   </button>
+                </div>
+                <div className="app-modal-content">
+                  {renderActiveApp()}
                 </div>
               </div>
             </div>
@@ -477,30 +560,35 @@ const StudentDashboard = () => {
           {activeTab === 'profile' && (
             <div className="profile-section">
               <div className="profile-card">
-                <h2>Account & Profile</h2>
+                <h2>My Profile</h2>
                 
+                {/* Enhanced Profile Section */}
                 <div className="profile-group">
-                  <h3>Profile Details</h3>
-                  <div className="profile-fields">
-                    <div className="profile-field">
-                      <label>Full Name</label>
-                      <p>{user.fullName}</p>
+                  <h3>Profile Information</h3>
+                  <div className="profile-enhanced">
+                    <div className="profile-avatar">
+                      <img 
+                        src={user?.profilePicture || localStorage.getItem('githubAvatar') || `https://github.com/${localStorage.getItem('githubUsername')}.png?size=100`}
+                        alt="Profile Avatar"
+                        className="avatar-img"
+                      />
                     </div>
-                    <div className="profile-field">
-                      <label>Student ID</label>
-                      <p>{user.studentId || 'Not provided'}</p>
-                    </div>
-                    <div className="profile-field">
-                      <label>Year & Section</label>
-                      <p>{user.year || 'Not provided'} • {user.section || 'N/A'}</p>
-                    </div>
-                    <div className="profile-field">
-                      <label>Email</label>
-                      <p>{user.email}</p>
+                    <div className="profile-details">
+                      <div className="profile-name">
+                        <h4>{user.fullName}</h4>
+                        <span className="profile-badge">Student</span>
+                      </div>
+                      <div className="profile-info">
+                        <p><strong>Student ID:</strong> {user.studentId || 'Not provided'}</p>
+                        <p><strong>Year & Section:</strong> {user.year || 'Not provided'} • {user.section || 'N/A'}</p>
+                        <p><strong>Email:</strong> {user.email}</p>
+                        <p><strong>GitHub:</strong> @{localStorage.getItem('githubUsername') || 'Not connected'}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
 
+                {/* GitHub Integration */}
                 <div className="profile-group">
                   <h3>GitHub Integration</h3>
                   <div className="github-settings">
@@ -535,57 +623,186 @@ const StudentDashboard = () => {
                     )}
                   </div>
                 </div>
+              </div>
+            </div>
+          )}
 
+          {/* ===== RANK TAB ===== */}
+          {activeTab === 'rank' && (
+            <div className="profile-section">
+              <div className="profile-card">
+                <h2>Rank & Achievements</h2>
+                
+                {/* Rank Section */}
                 <div className="profile-group">
-                  <h3>Account Settings</h3>
-                  <div className="settings-buttons">
-                    <button 
-                      className="btn btn-secondary"
-                      title="Change your password"
-                    >
-                      <span>🔐 Change Password</span>
-                    </button>
-                    <button 
-                      className="btn btn-secondary"
-                      title="Update your email address"
-                    >
-                      <span>✉️ Update Email</span>
-                    </button>
-                    <button 
-                      onClick={() => setActiveTab('overview')}
-                      className="btn btn-secondary-outline"
-                      title="Go back to overview"
-                    >
-                      <ArrowLeft size={18} />
-                      <span>Back to Overview</span>
-                    </button>
+                  <h3>Current Rank</h3>
+                  <div className="rank-section">
+                    <div className="rank-display">
+                      <div className="rank-icon">🏆</div>
+                      <div className="rank-info">
+                        <h4>Silver Member</h4>
+                        <div className="rank-progress">
+                          <div className="progress-bar">
+                            <div className="progress-fill" style={{width: '65%'}}></div>
+                          </div>
+                          <span className="progress-text">650 / 1000 XP</span>
+                        </div>
+                        <p className="rank-description">Active contributor with 12 projects</p>
+                      </div>
+                    </div>
+                    
+                    <div className="achievements-grid">
+                      <div className="achievement-badge">
+                        <div className="badge-icon">⭐</div>
+                        <span>First Project</span>
+                      </div>
+                      <div className="achievement-badge">
+                        <div className="badge-icon">🚀</div>
+                        <span>Early Adopter</span>
+                      </div>
+                      <div className="achievement-badge">
+                        <div className="badge-icon">💡</div>
+                        <span>Innovator</span>
+                      </div>
+                      <div className="achievement-badge">
+                        <div className="badge-icon">🤝</div>
+                        <span>Team Player</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Rank Statistics */}
+                <div className="profile-group">
+                  <h3>Statistics</h3>
+                  <div className="stats-grid">
+                    <div className="stat-item">
+                      <div className="stat-number">12</div>
+                      <div className="stat-label">Projects</div>
+                    </div>
+                    <div className="stat-item">
+                      <div className="stat-number">8</div>
+                      <div className="stat-label">Contributions</div>
+                    </div>
+                    <div className="stat-item">
+                      <div className="stat-number">4</div>
+                      <div className="stat-label">Events</div>
+                    </div>
+                    <div className="stat-item">
+                      <div className="stat-number">650</div>
+                      <div className="stat-label">Total XP</div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Announcements Section */}
-          {activeTab === 'overview' && (
-            <div className="announcements-section">
-              <h3>📢 Announcements</h3>
-              <div className="announcements-list">
-                <div className="announcement-item">
-                  <span className="announcement-badge">Workshop</span>
-                  <p>New workshops available - React Advanced Patterns</p>
+          {/* ===== SETTINGS TAB ===== */}
+          {activeTab === 'settings' && (
+            <div className="profile-section">
+              <div className="profile-card">
+                <h2>Account Settings</h2>
+                
+                {/* Profile Settings */}
+                <div className="profile-group">
+                  <h3>Profile Settings</h3>
+                  <div className="settings-list">
+                    <div className="setting-item">
+                      <div className="setting-info">
+                        <p><strong>Display Name</strong></p>
+                        <small>Update how your name appears to others</small>
+                      </div>
+                      <button className="btn btn-secondary-small">
+                        Edit
+                      </button>
+                    </div>
+                    <div className="setting-item">
+                      <div className="setting-info">
+                        <p><strong>Profile Picture</strong></p>
+                        <small>Change your profile image</small>
+                      </div>
+                      <button className="btn btn-secondary-small">
+                        Change
+                      </button>
+                    </div>
+                    <div className="setting-item">
+                      <div className="setting-info">
+                        <p><strong>Bio</strong></p>
+                        <small>Add a short description about yourself</small>
+                      </div>
+                      <button className="btn btn-secondary-small">
+                        Edit
+                      </button>
+                    </div>
+                  </div>
                 </div>
-                <div className="announcement-item">
-                  <span className="announcement-badge">Deadline</span>
-                  <p>Project submissions close on December 15th</p>
+
+                {/* Security Settings */}
+                <div className="profile-group">
+                  <h3>Security</h3>
+                  <div className="settings-list">
+                    <div className="setting-item">
+                      <div className="setting-info">
+                        <p><strong>Password</strong></p>
+                        <small>Last changed 3 months ago</small>
+                      </div>
+                      <button className="btn btn-secondary-small">
+                        Change
+                      </button>
+                    </div>
+                    <div className="setting-item">
+                      <div className="setting-info">
+                        <p><strong>Email Address</strong></p>
+                        <small>{user.email}</small>
+                      </div>
+                      <button className="btn btn-secondary-small">
+                        Update
+                      </button>
+                    </div>
+                    <div className="setting-item">
+                      <div className="setting-info">
+                        <p><strong>Two-Factor Authentication</strong></p>
+                        <small>Add an extra layer of security</small>
+                      </div>
+                      <button className="btn btn-secondary-small">
+                        Enable
+                      </button>
+                    </div>
+                  </div>
                 </div>
-                <div className="announcement-item">
-                  <span className="announcement-badge">Opportunity</span>
-                  <p>Join the AID-X Hackathon 2025 - Registration open now!</p>
+
+                {/* Preferences */}
+                <div className="profile-group">
+                  <h3>Preferences</h3>
+                  <div className="settings-list">
+                    <div className="setting-item">
+                      <div className="setting-info">
+                        <p><strong>Email Notifications</strong></p>
+                        <small>Receive updates about your projects</small>
+                      </div>
+                      <label className="toggle-switch">
+                        <input type="checkbox" defaultChecked />
+                        <span className="toggle-slider"></span>
+                      </label>
+                    </div>
+                    <div className="setting-item">
+                      <div className="setting-info">
+                        <p><strong>Dark Mode</strong></p>
+                        <small>Use dark theme across the platform</small>
+                      </div>
+                      <label className="toggle-switch">
+                        <input type="checkbox" defaultChecked />
+                        <span className="toggle-slider"></span>
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           )}
-        </main>
+
+                  </main>
       </div>
       
           {/* Shooting Stars Background Effect */}
@@ -611,8 +828,6 @@ const StudentDashboard = () => {
       {/* Meteors Effect */}
       <Meteors number={15} />
     </div>
-      </ErrorBoundary>
-    </ErrorFallback>
   );
 };
 

@@ -1,12 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import "./utils/global-error-blocker";
-import "./utils/aggressive-error-handler";
-import "./utils/error-handler";
+// import "./utils/global-error-blocker";
+// import "./utils/aggressive-error-handler";
+// import "./utils/error-handler";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Error from "./error.jsx";
-import ErrorBoundary from "./components/ui/error-boundary";
+import { NotFound } from "./components/ui/ghost-404-page";
+import { SmoothCursor } from "./components/ui/smooth-cursor";
 import {
   Navbar,
   Hero,
@@ -33,10 +33,9 @@ ReactGA.pageview(window.location.pathname + window.location.search);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <ErrorBoundary>
-      <BrowserRouter>
-        <AuthProvider>
-          <Routes>
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
           <Route
             path="/"
             element={
@@ -149,14 +148,12 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route
             path="*"
             element={
-              <div className="bg-error">
-                <Navbar /> <Error />
-              </div>
+              <NotFound />
             }
           />
         </Routes>
         </AuthProvider>
       </BrowserRouter>
-    </ErrorBoundary>
+    <SmoothCursor />
   </React.StrictMode>
 );
