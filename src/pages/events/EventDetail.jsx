@@ -8,7 +8,316 @@ export default function EventDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
-  
+
+  // Modal state
+  const [showRSVPModal, setShowRSVPModal] = useState(false);
+  const [guestFormData, setGuestFormData] = useState({
+    name: '',
+    rollNo: '',
+    college: '',
+    email: '',
+    contactNo: ''
+  });
+
+  // Show static demo event detail if id is 'demo123'
+  if (id === 'demo123') {
+    return (
+      <div className="gdg-demo-detail-page" style={{ background: '#fff', minHeight: '100vh', fontFamily: 'Google Sans, Roboto, Arial, sans-serif' }}>
+        {/* Banner */}
+        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 0 0 0' }}>
+          <div style={{ background: '#f5f5f5', borderRadius: 24, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 220, marginBottom: 32 }}>
+            <img src="/images/s/club_logo.png" alt="AID-X Demo Event Banner" style={{ width: 320, height: 180, objectFit: 'contain', margin: 32 }} />
+            <div style={{ flex: 1 }} />
+          </div>
+        </div>
+        {/* Main Info */}
+        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 0 32px 0' }}>
+          <h1 style={{ fontSize: '2.5rem', fontWeight: 700, color: '#222', marginBottom: 8 }}>AID-X Demo Event 2025</h1>
+          <div style={{ fontSize: '1.1rem', color: '#1a73e8', fontWeight: 500, marginBottom: 8 }}>AID-X Club Auditorium</div>
+          <div style={{ fontSize: '1rem', color: '#444', marginBottom: 16 }}>AID-X Club, Residency Road, Hyderabad, 440001</div>
+          <div style={{ fontSize: '1rem', color: '#1a73e8', marginBottom: 16 }}>AID-X Club</div>
+          <div style={{ fontSize: '1.1rem', color: '#444', marginBottom: 16 }}>
+            AID-X Demo Event 2025 is a flagship tech event organized by AID-X Club, bringing together developers, students, and tech enthusiasts to learn, connect, and explore the latest in AI and club technologies.
+          </div>
+          {/* Social icons */}
+          <div style={{ display: 'flex', gap: 16, marginBottom: 24 }}>
+            <a href="mailto:shubhamvasantgundu@gmail.com" style={{ color: '#222', fontSize: 24, textDecoration: 'none' }}>✉️</a>
+            <a href="https://www.linkedin.com/in/shubhamvasantgundu/" target="_blank" rel="noopener noreferrer" style={{ color: '#222', fontSize: 24, textDecoration: 'none' }}>in</a>
+          </div>
+        </div>
+        {/* Date, RSVP, and Key Themes */}
+        <div style={{ background: '#f5f5f5', borderRadius: 0, padding: '24px 0', marginBottom: 32 }}>
+          <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+            <div style={{ fontSize: '1.1rem', color: '#222', fontWeight: 600 }}>
+              Dec 21, 9:00 AM – 7:00 PM (GMT+5:30) &nbsp; <span style={{ color: '#888', fontWeight: 400 }}>0 RSVP'd</span>
+            </div>
+            <button className="gdg-view-details-btn" style={{ background: '#1a73e8', color: '#fff', fontWeight: 600, fontSize: '1.1rem', borderRadius: 6, padding: '10px 32px', border: 'none', cursor: 'pointer' }} onClick={() => {
+              if (user) {
+                alert(`RSVP confirmed for ${user.fullName}! Your registered details have been saved.`);
+              } else {
+                setShowRSVPModal(true);
+              }
+            }}>Get tickets</button>
+          </div>
+        </div>
+        {/* About and Key Themes */}
+        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', gap: 48, alignItems: 'flex-start', flexWrap: 'wrap' }}>
+          {/* Key Themes */}
+          <div style={{ minWidth: 220, flex: '0 0 220px' }}>
+            <div style={{ fontWeight: 600, fontSize: '1.1rem', marginBottom: 16 }}>Key Themes</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <span className="gdg-tag-chip" style={{ border: '1.5px solid #bbb', background: '#fff', color: '#222', fontWeight: 500, fontSize: '1rem', borderRadius: 20, padding: '6px 18px', marginBottom: 2 }}>AI</span>
+              <span className="gdg-tag-chip" style={{ border: '1.5px solid #bbb', background: '#fff', color: '#222', fontWeight: 500, fontSize: '1rem', borderRadius: 20, padding: '6px 18px', marginBottom: 2 }}>Hackathon</span>
+              <span className="gdg-tag-chip" style={{ border: '1.5px solid #bbb', background: '#fff', color: '#222', fontWeight: 500, fontSize: '1rem', borderRadius: 20, padding: '6px 18px', marginBottom: 2 }}>Student</span>
+              <span className="gdg-tag-chip" style={{ border: '1.5px solid #bbb', background: '#fff', color: '#222', fontWeight: 500, fontSize: '1rem', borderRadius: 20, padding: '6px 18px', marginBottom: 2 }}>AI & Machine Learning</span>
+            </div>
+          </div>
+          {/* About Section */}
+          <div style={{ flex: 1, minWidth: 320 }}>
+            <div style={{ fontWeight: 700, fontSize: '2rem', marginBottom: 16 }}>About this event</div>
+            <div style={{ fontSize: '1.1rem', color: '#222', marginBottom: 18 }}>
+              <b>AID-X Demo Event 2025</b> is a flagship tech event organized by <b>AID-X Club</b>, bringing together developers, students, and tech enthusiasts to learn, connect, and explore the latest in AI and club technologies. The event features expert-led sessions, hands-on workshops, and networking opportunities around topics like AI, Cloud, Web, and more — fostering collaboration, innovation, and community growth in the Hyderabad tech ecosystem.
+            </div>
+            <div style={{ fontWeight: 600, fontSize: '1.2rem', margin: '24px 0 8px 0' }}>1. Regular Registration — Free</div>
+            <ul style={{ fontSize: '1.05rem', color: '#222', marginBottom: 18 }}>
+              <li>Entry to all key sessions and tracks</li>
+              <li>Access to workshops and experience zones</li>
+              <li>Networking lunch</li>
+              <li>Certificate of participation</li>
+            </ul>
+            <div style={{ fontWeight: 600, fontSize: '1.2rem', margin: '24px 0 8px 0' }}>2. VIP Registration — ₹499</div>
+            <ul style={{ fontSize: '1.05rem', color: '#222', marginBottom: 18 }}>
+              <li>Front-row seating for all sessions</li>
+              <li>Exclusive dinner with speakers and community leaders</li>
+              <li>Premium AID-X merchandise and early access to updates</li>
+              <li>VIP photo ops and networking access</li>
+            </ul>
+          </div>
+        </div>
+        {/* Organizer Section */}
+        <div style={{ maxWidth: 1100, margin: '64px auto 0 auto', textAlign: 'center' }}>
+          <div style={{ fontWeight: 700, fontSize: '2.2rem', marginBottom: 32 }}>Organizers</div>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 64, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 220 }}>
+              <img src="/images/s/club_logo.png" alt="Shubham" style={{ width: 120, height: 120, borderRadius: '50%', objectFit: 'cover', marginBottom: 16, background: '#f5f5f5' }} />
+              <div style={{ fontWeight: 700, fontSize: '1.2rem', marginBottom: 4 }}>Shubham Gundu</div>
+              <div style={{ color: '#444', fontSize: '1.05rem', marginBottom: 2 }}>AID-X Club</div>
+              <div style={{ color: '#888', fontSize: '1rem', marginBottom: 8 }}>Lead Organizer</div>
+            </div>
+          </div>
+        </div>
+        {/* Back Button */}
+        <div style={{ maxWidth: 1100, margin: '40px auto 0 auto', textAlign: 'left' }}>
+          <button onClick={() => navigate('/events')} className="back-button-full" style={{ marginTop: 32, background: 'none', border: 'none', color: '#1a73e8', fontSize: '1.1rem', fontWeight: 600, cursor: 'pointer' }}>
+            ← Back to Events
+          </button>
+        </div>
+
+        {/* RSVP Modal */}
+        {showRSVPModal && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+            fontFamily: 'Google Sans, Roboto, Arial, sans-serif'
+          }}>
+            <div style={{
+              background: '#fff',
+              borderRadius: 12,
+              padding: 32,
+              maxWidth: 500,
+              width: '90%',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.2)'
+            }}>
+              <h2 style={{ fontSize: '1.8rem', fontWeight: 700, marginBottom: 8, color: '#222' }}>RSVP for Event</h2>
+              <p style={{ fontSize: '1rem', color: '#666', marginBottom: 24 }}>Choose your registration option:</p>
+
+              {/* Club Member Option */}
+              <div style={{ marginBottom: 24 }}>
+                <button
+                  onClick={() => {
+                    localStorage.setItem('redirectPath', `/event/${id}`);
+                    navigate('/login');
+                  }}
+                  style={{
+                    width: '100%',
+                    padding: 16,
+                    background: '#f1f3f4',
+                    border: '2px solid #e0e0e0',
+                    borderRadius: 8,
+                    fontSize: '1.1rem',
+                    fontWeight: 600,
+                    color: '#222',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s'
+                  }}
+                  onMouseEnter={(e) => { e.target.style.background = '#e8eaed'; e.target.style.borderColor = '#1a73e8'; }}
+                  onMouseLeave={(e) => { e.target.style.background = '#f1f3f4'; e.target.style.borderColor = '#e0e0e0'; }}
+                >
+                  👤 I'm an Active Club Member
+                </button>
+              </div>
+
+              <div style={{ fontSize: '0.95rem', color: '#888', textAlign: 'center', marginBottom: 20 }}>OR</div>
+
+              {/* Non-Member Form */}
+              <form onSubmit={(e) => {
+                e.preventDefault();
+                if (!guestFormData.name || !guestFormData.email || !guestFormData.rollNo || !guestFormData.college || !guestFormData.contactNo) {
+                  alert('Please fill in all fields');
+                  return;
+                }
+                alert(`Thank you ${guestFormData.name}! Your RSVP has been recorded. Check your email for confirmation.`);
+                setShowRSVPModal(false);
+                setGuestFormData({
+                  name: '',
+                  rollNo: '',
+                  college: '',
+                  email: '',
+                  contactNo: ''
+                });
+              }} style={{ marginBottom: 16 }}>
+                <p style={{ fontSize: '0.95rem', fontWeight: 600, color: '#222', marginBottom: 16 }}>Not a member? Register as guest:</p>
+                <div style={{ marginBottom: 16 }}>
+                  <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, color: '#222' }}>Name *</label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={guestFormData.name}
+                    onChange={(e) => {
+                      const { name, value } = e.target;
+                      setGuestFormData(prev => ({
+                        ...prev,
+                        [name]: value
+                      }));
+                    }}
+                    placeholder="Enter your full name"
+                    style={{ width: '100%', padding: 10, border: '1.5px solid #ddd', borderRadius: 6, fontSize: '1rem', boxSizing: 'border-box' }}
+                  />
+                </div>
+                <div style={{ marginBottom: 16 }}>
+                  <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, color: '#222' }}>Roll Number *</label>
+                  <input
+                    type="text"
+                    name="rollNo"
+                    value={guestFormData.rollNo}
+                    onChange={(e) => {
+                      const { name, value } = e.target;
+                      setGuestFormData(prev => ({
+                        ...prev,
+                        [name]: value
+                      }));
+                    }}
+                    placeholder="Enter your roll number"
+                    style={{ width: '100%', padding: 10, border: '1.5px solid #ddd', borderRadius: 6, fontSize: '1rem', boxSizing: 'border-box' }}
+                  />
+                </div>
+                <div style={{ marginBottom: 16 }}>
+                  <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, color: '#222' }}>College *</label>
+                  <input
+                    type="text"
+                    name="college"
+                    value={guestFormData.college}
+                    onChange={(e) => {
+                      const { name, value } = e.target;
+                      setGuestFormData(prev => ({
+                        ...prev,
+                        [name]: value
+                      }));
+                    }}
+                    placeholder="Enter your college name"
+                    style={{ width: '100%', padding: 10, border: '1.5px solid #ddd', borderRadius: 6, fontSize: '1rem', boxSizing: 'border-box' }}
+                  />
+                </div>
+                <div style={{ marginBottom: 16 }}>
+                  <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, color: '#222' }}>Email *</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={guestFormData.email}
+                    onChange={(e) => {
+                      const { name, value } = e.target;
+                      setGuestFormData(prev => ({
+                        ...prev,
+                        [name]: value
+                      }));
+                    }}
+                    placeholder="Enter your email"
+                    style={{ width: '100%', padding: 10, border: '1.5px solid #ddd', borderRadius: 6, fontSize: '1rem', boxSizing: 'border-box' }}
+                  />
+                </div>
+                <div style={{ marginBottom: 24 }}>
+                  <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, color: '#222' }}>Contact Number *</label>
+                  <input
+                    type="tel"
+                    name="contactNo"
+                    value={guestFormData.contactNo}
+                    onChange={(e) => {
+                      const { name, value } = e.target;
+                      setGuestFormData(prev => ({
+                        ...prev,
+                        [name]: value
+                      }));
+                    }}
+                    placeholder="Enter your phone number"
+                    style={{ width: '100%', padding: 10, border: '1.5px solid #ddd', borderRadius: 6, fontSize: '1rem', boxSizing: 'border-box' }}
+                  />
+                </div>
+                <button
+                  type="submit"
+                  style={{
+                    width: '100%',
+                    padding: 12,
+                    background: '#1a73e8',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: 6,
+                    fontSize: '1.1rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    marginBottom: 12
+                  }}
+                >
+                  Register as Guest
+                </button>
+              </form>
+
+              <button
+                onClick={() => {
+                  setShowRSVPModal(false);
+                  setGuestFormData({ name: '', rollNo: '', college: '', email: '', contactNo: '' });
+                }}
+                style={{
+                  width: '100%',
+                  padding: 12,
+                  background: '#f1f3f4',
+                  color: '#666',
+                  border: 'none',
+                  borderRadius: 6,
+                  fontSize: '1rem',
+                  fontWeight: 600,
+                  cursor: 'pointer'
+                }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // For other events - fetch from backend
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -29,12 +338,6 @@ export default function EventDetail() {
         `${import.meta.env.VITE_API_URL}/api/events/${id}`
       );
       setEvent(response.data.data);
-      
-      if (user) {
-        setIsRegistered(response.data.data.registeredUsers?.some(u => u._id === user.id));
-        setIsLiked(response.data.data.likedBy?.includes(user.id));
-        setIsSaved(response.data.data.savedBy?.includes(user.id));
-      }
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to load event');
     } finally {
@@ -175,6 +478,11 @@ export default function EventDetail() {
     );
   }
 
+  // Multi-stage event logic (example: hackathon/ideathon)
+  const isMultiStage = ['hackathon', 'ideathon'].includes(event.eventType);
+  const isWorkshop = event.eventType === 'workshop';
+  const isAdmin = user && (user.role === 'admin' || user.role === 'coordinator');
+
   return (
     <div className="event-detail-page">
       {/* Hero Section */}
@@ -197,7 +505,87 @@ export default function EventDetail() {
       <div className="event-detail-container">
         {/* Left Column */}
         <div className="event-detail-main">
-          {/* Quick Info */}
+          {/* Multi-Stage Progress (for hackathons/ideathons) */}
+          {isMultiStage && (
+            <section className="event-section">
+              <h2>Event Stages</h2>
+              <ol className="event-stages-list">
+                <li className="stage-item">1. Idea Submission {event.stage === 'idea' && <span className="stage-active">(Current)</span>}</li>
+                <li className="stage-item">2. Shortlisting {event.stage === 'shortlist' && <span className="stage-active">(Current)</span>}</li>
+                <li className="stage-item">3. Final Presentation {event.stage === 'final' && <span className="stage-active">(Current)</span>}</li>
+                {event.stage === 'results' && <li className="stage-item stage-active">Results Announced</li>}
+              </ol>
+            </section>
+          )}
+
+          {/* Team Registration (for hackathons/ideathons) */}
+          {isMultiStage && (
+            <section className="event-section">
+              <h2>Team Registration</h2>
+              {isRegistered ? (
+                <div className="team-info">
+                  <p><b>Your Team:</b> [Team Name Here]</p>
+                  <ul>
+                    <li>Member 1 (You)</li>
+                    <li>Member 2</li>
+                    <li>Member 3</li>
+                  </ul>
+                  <button className="btn btn-secondary">Edit Team</button>
+                </div>
+              ) : (
+                <div className="team-register">
+                  <p>Register as a team to participate in this event.</p>
+                  <button className="btn btn-primary">Create/Join Team</button>
+                </div>
+              )}
+            </section>
+          )}
+
+          {/* Submission Section (for hackathons/ideathons) */}
+          {isMultiStage && isRegistered && (
+            <section className="event-section">
+              <h2>Project Submission</h2>
+              <form className="submission-form">
+                <label>GitHub Repo Link
+                  <input type="url" placeholder="https://github.com/yourproject" />
+                </label>
+                <label>PPT/Document Upload
+                  <input type="file" accept=".pdf,.ppt,.pptx,.doc,.docx" />
+                </label>
+                <label>Demo Link (optional)
+                  <input type="url" placeholder="https://demo.com" />
+                </label>
+                <button className="btn btn-primary">Submit</button>
+              </form>
+            </section>
+          )}
+
+          {/* Workshop Session Schedule (for workshops) */}
+          {isWorkshop && event.sessions && event.sessions.length > 0 && (
+            <section className="event-section">
+              <h2>Session Schedule</h2>
+              <ul className="session-list">
+                {event.sessions.map((session, idx) => (
+                  <li key={idx}>
+                    <b>{session.title}</b> - {session.speaker} ({formatDate(session.date)} {formatTime(session.date)})
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {/* Certificates/Results (for completed events) */}
+          {event.status === 'completed' && (
+            <section className="event-section">
+              <h2>Results & Certificates</h2>
+              <div className="results-list">
+                <p>🏆 Winning Teams: [Team Alpha, Team Beta]</p>
+                <a href="#" className="btn btn-secondary">Download Certificate</a>
+                <a href="#" className="btn btn-secondary">View Project Links</a>
+              </div>
+            </section>
+          )}
+
           <div className="quick-info">
             <div className="info-item">
               <span className="info-label">📅 Date</span>
@@ -214,7 +602,7 @@ export default function EventDetail() {
                 {event.location?.isOnline ? '🌐' : '📍'} Location
               </span>
               <span className="info-value">
-                {event.location?.isOnline 
+                {event.location?.isOnline
                   ? 'Online Event'
                   : `${event.location?.venue || 'To be announced'}`}
               </span>
@@ -276,7 +664,7 @@ export default function EventDetail() {
               </div>
               <div className="reg-stat">
                 <span className="stat-number">
-                  {event.registrationDeadline 
+                  {event.registrationDeadline
                     ? new Date(event.registrationDeadline).toLocaleDateString()
                     : 'No Deadline'
                   }
@@ -297,7 +685,7 @@ export default function EventDetail() {
             {isRegistered ? (
               <>
                 <div className="registered-badge">✓ You're Registered!</div>
-                <button 
+                <button
                   onClick={handleUnregister}
                   className="btn btn-secondary"
                 >
@@ -310,11 +698,11 @@ export default function EventDetail() {
                   {event.maxParticipants && event.registrationCount < event.maxParticipants
                     ? `${event.maxParticipants - event.registrationCount} seats available`
                     : event.maxParticipants
-                    ? 'Event is full'
-                    : 'Unlimited seats'
+                      ? 'Event is full'
+                      : 'Unlimited seats'
                   }
                 </p>
-                <button 
+                <button
                   onClick={handleRegister}
                   className="btn btn-primary"
                   disabled={event.maxParticipants && event.registrationCount >= event.maxParticipants}
@@ -346,13 +734,13 @@ export default function EventDetail() {
 
           {/* Actions */}
           <div className="sidebar-card actions-card">
-            <button 
+            <button
               onClick={handleLike}
               className={`action-button ${isLiked ? 'active' : ''}`}
             >
               {isLiked ? '❤️' : '🤍'} {isLiked ? 'Unlike' : 'Like'}
             </button>
-            <button 
+            <button
               onClick={handleSave}
               className={`action-button ${isSaved ? 'active' : ''}`}
             >
@@ -366,8 +754,8 @@ export default function EventDetail() {
               <h3>Organized By</h3>
               <div className="organizer-info">
                 {event.organizer.profileImage && (
-                  <img 
-                    src={event.organizer.profileImage} 
+                  <img
+                    src={event.organizer.profileImage}
                     alt={event.organizer.fullName}
                     className="organizer-avatar"
                   />

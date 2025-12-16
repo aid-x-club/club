@@ -32,7 +32,12 @@ export const ProtectedRoute = ({ children, requiredRole = null }) => {
 
   // Check if user has required role
   if (requiredRole && user?.role !== requiredRole) {
-    return <Navigate to={`/${user?.role}/dashboard`} replace />;
+    // Redirect based on actual role
+    if (user?.role === 'admin' || user?.role === 'coordinator') {
+      return <Navigate to="/admin/dashboard" replace />;
+    } else {
+      return <Navigate to="/student/dashboard" replace />;
+    }
   }
 
   return children;
@@ -64,7 +69,11 @@ export const PublicRoute = ({ children }) => {
 
   // If user is already authenticated, redirect to their dashboard
   if (isAuthenticated && user) {
-    return <Navigate to={`/${user.role}/dashboard`} replace />;
+    if (user.role === 'admin' || user.role === 'coordinator') {
+      return <Navigate to="/admin/dashboard" replace />;
+    } else {
+      return <Navigate to="/student/dashboard" replace />;
+    }
   }
 
   return children;

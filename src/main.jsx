@@ -10,22 +10,21 @@ import { SmoothCursor } from "./components/ui/smooth-cursor";
 import {
   Navbar,
   Hero,
-  Events,
   Guildelines,
   About,
 } from "./components";
+import EventsPage from "./pages/events/Events";
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute, PublicRoute } from "./components/ProtectedRoute";
 import SignUp from "./pages/auth/SignUp";
 import Login from "./pages/auth/Login";
 import ForgotPassword from "./pages/auth/ForgotPassword";
-import Projects from "./pages/projects/Projects";
-import ProjectDetail from "./pages/projects/ProjectDetail";
 import CreateProject from "./pages/projects/CreateProject";
 import EventDetail from "./pages/events/EventDetail";
 import CreateEvent from "./pages/events/CreateEvent";
 import StudentDashboard from "./pages/student/StudentDashboard";
 import GitHubCallback from "./pages/github/GitHubCallback";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 
 import ReactGA from "react-ga";
 ReactGA.initialize("K6F7N5MR4K");
@@ -50,7 +49,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             element={
               <div className="events-bg">
                 <Navbar />
-                <Events />
+                <EventsPage />
               </div>
             }
           />
@@ -97,23 +96,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
               </PublicRoute>
             }
           />
-          {/* Project Routes */}
-          <Route
-            path="/projects"
-            element={<Projects />}
-          />
-          <Route
-            path="/project/:id"
-            element={<ProjectDetail />}
-          />
-          <Route
-            path="/create-project"
-            element={
-              <ProtectedRoute>
-                <CreateProject />
-              </ProtectedRoute>
-            }
-          />
           {/* Event Routes */}
           <Route
             path="/event/:id"
@@ -124,6 +106,14 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             element={
               <ProtectedRoute>
                 <CreateEvent />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/create-project"
+            element={
+              <ProtectedRoute>
+                <CreateProject />
               </ProtectedRoute>
             }
           />
@@ -145,6 +135,15 @@ ReactDOM.createRoot(document.getElementById("root")).render(
               </ProtectedRoute>
             }
           />
+          {/* Admin Routes */}
+          <Route
+            path="/admin/dashboard"
+            element={
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="*"
             element={
@@ -152,8 +151,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             }
           />
         </Routes>
-        </AuthProvider>
-      </BrowserRouter>
+      </AuthProvider>
+    </BrowserRouter>
     <SmoothCursor />
   </React.StrictMode>
 );

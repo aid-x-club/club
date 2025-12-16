@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import './Events.css';
 
 export default function Events() {
+  const navigate = useNavigate();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -18,6 +19,19 @@ export default function Events() {
 
   const [total, setTotal] = useState(0);
   const [pages, setPages] = useState(0);
+
+  // Demo event
+  const demoEvent = {
+    _id: 'demo123',
+    title: 'AID-X Demo Event 2025',
+    coverImage: '',
+    startDate: new Date().toISOString(),
+    location: { venue: 'AID-X Club Auditorium' },
+    tags: ['AI', 'Hackathon', 'Student'],
+    category: 'AI & Machine Learning',
+    eventType: 'hackathon',
+    shortDescription: 'A showcase demo event for the new AID-X Club Portal. Join us for a day of innovation, learning, and fun!'
+  };
 
   useEffect(() => {
     fetchEvents();
@@ -96,229 +110,167 @@ export default function Events() {
     });
   };
 
+
+
   return (
-    <div className="events-page">
-      <div className="events-header">
-        <h1>Events & Workshops</h1>
-        <p>Discover amazing events and networking opportunities</p>
+    <div className="events-gdg-page">
+      <header className="gdg-header">
+        <h1 className="gdg-title">Upcoming events</h1>
+        <p className="gdg-subtitle">
+          We can't wait to see you at an upcoming event! On this page, you can advance search by location, select event types (how you want to join the event), and/or pick out topics of your interest!
+        </p>
+      </header>
+
+      {/* Search and Filters Bar */}
+      <div className="gdg-filters-bar">
+        <input
+          type="text"
+          className="gdg-search-input"
+          placeholder="Search for a Event"
+          value={search}
+          onChange={handleSearch}
+        />
+        <select
+          className="gdg-filter-select"
+          value={eventType}
+          onChange={e => handleFilterChange('eventType', e.target.value)}
+        >
+          <option value="">Event types</option>
+          <option value="workshop">Workshop</option>
+          <option value="hackathon">Hackathon</option>
+          <option value="seminar">Seminar</option>
+          <option value="webinar">Webinar</option>
+          <option value="meetup">Meetup</option>
+          <option value="competition">Competition</option>
+          <option value="conference">Conference</option>
+          <option value="other">Other</option>
+        </select>
+        <select
+          className="gdg-filter-select"
+          value={category}
+          onChange={e => handleFilterChange('category', e.target.value)}
+        >
+          <option value="">Event topics</option>
+          <option value="ai-ml">AI & Machine Learning</option>
+          <option value="web">Web Development</option>
+          <option value="mobile">Mobile App</option>
+          <option value="blockchain">Blockchain</option>
+          <option value="iot">IoT</option>
+          <option value="game">Game Development</option>
+          <option value="general">General</option>
+          <option value="other">Other</option>
+        </select>
       </div>
 
-      <div className="events-container">
-        {/* Sidebar Filters */}
-        <aside className="events-sidebar">
-          <div className="filter-group">
-            <h3>Search</h3>
-            <input
-              type="text"
-              placeholder="Search events..."
-              defaultValue={search}
-              onChange={handleSearch}
-              className="search-input"
-            />
+      {/* List Toggle Only (no calendar) */}
+      <div className="gdg-toggle-bar">
+        <span className="gdg-toggle active">List</span>
+      </div>
+
+      {/* Demo Event Card */}
+      <main className="gdg-events-list">
+        <div className="gdg-event-card">
+          <div className="gdg-event-logo">
+            <div className="gdg-event-logo-placeholder">A</div>
           </div>
-
-          <div className="filter-group">
-            <h3>Event Type</h3>
-            <select
-              value={eventType}
-              onChange={(e) => handleFilterChange('eventType', e.target.value)}
-              className="filter-select"
-            >
-              <option value="">All Types</option>
-              <option value="workshop">Workshop</option>
-              <option value="hackathon">Hackathon</option>
-              <option value="seminar">Seminar</option>
-              <option value="webinar">Webinar</option>
-              <option value="meetup">Meetup</option>
-              <option value="competition">Competition</option>
-              <option value="conference">Conference</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-
-          <div className="filter-group">
-            <h3>Category</h3>
-            <select
-              value={category}
-              onChange={(e) => handleFilterChange('category', e.target.value)}
-              className="filter-select"
-            >
-              <option value="">All Categories</option>
-              <option value="web">Web Development</option>
-              <option value="mobile">Mobile App</option>
-              <option value="ai-ml">AI & Machine Learning</option>
-              <option value="blockchain">Blockchain</option>
-              <option value="iot">IoT</option>
-              <option value="game">Game Development</option>
-              <option value="general">General</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-
-          <div className="filter-group">
-            <h3>Status</h3>
-            <select
-              value={status}
-              onChange={(e) => handleFilterChange('status', e.target.value)}
-              className="filter-select"
-            >
-              <option value="">All Status</option>
-              <option value="upcoming">Upcoming</option>
-              <option value="ongoing">Ongoing</option>
-              <option value="completed">Completed</option>
-              <option value="cancelled">Cancelled</option>
-            </select>
-          </div>
-
-          <div className="filter-group">
-            <h3>Sort By</h3>
-            <select
-              value={sort}
-              onChange={(e) => handleFilterChange('sort', e.target.value)}
-              className="filter-select"
-            >
-              <option value="upcoming">Upcoming First</option>
-              <option value="trending">Most Popular</option>
-              <option value="recent">Most Recent</option>
-            </select>
-          </div>
-        </aside>
-
-        {/* Main Content */}
-        <main className="events-main">
-          {error && <div className="error-message">{error}</div>}
-
-          {loading ? (
-            <div className="loading-spinner">
-              <div className="spinner"></div>
-              <p>Loading events...</p>
+          <div className="gdg-event-main">
+            <div className="gdg-event-meta-top">
+              <span className="gdg-event-date">{formatDate(demoEvent.startDate)}</span>
+              {demoEvent.location?.venue && (
+                <span className="gdg-event-location">- {demoEvent.location.venue}</span>
+              )}
             </div>
-          ) : events.length > 0 ? (
-            <>
-              <div className="events-list">
-                {events.map((event) => (
-                  <a
-                    key={event._id}
-                    href={`/event/${event._id}`}
-                    className="event-card"
-                  >
-                    <div className="event-card-left">
-                      {event.coverImage && (
-                        <img
-                          src={event.coverImage}
-                          alt={event.title}
-                          className="event-image"
-                        />
-                      )}
-                    </div>
-
-                    <div className="event-card-right">
-                      <div className="event-header">
-                        <h3>{event.title}</h3>
-                        <span className={`status-badge status-${event.status}`}>
-                          {event.status}
-                        </span>
-                      </div>
-
-                      <p className="event-description">
-                        {event.shortDescription || event.description.substring(0, 100)}...
-                      </p>
-
-                      <div className="event-meta">
-                        <div className="meta-item">
-                          📅 {formatDate(event.startDate)}
-                        </div>
-                        <div className="meta-item">
-                          🕐 {formatTime(event.startDate)}
-                        </div>
-                        {event.location?.isOnline ? (
-                          <div className="meta-item">🌐 Online</div>
-                        ) : event.location?.venue ? (
-                          <div className="meta-item">📍 {event.location.venue}</div>
-                        ) : null}
-                      </div>
-
-                      <div className="event-tags">
-                        <span className="event-type-badge">{event.eventType}</span>
-                        <span className="event-category-badge">{event.category}</span>
-                      </div>
-
-                      <div className="event-footer">
-                        <div className="event-stats">
-                          <span className="stat">
-                            👁️ {event.views}
-                          </span>
-                          <span className="stat">
-                            ❤️ {event.likes}
-                          </span>
-                          <span className="stat">
-                            👥 {event.registrationCount}/{event.maxParticipants || '∞'}
-                          </span>
-                        </div>
-
-                        {event.organizer && (
-                          <div className="event-organizer">
-                            {event.organizer.profileImage && (
-                              <img
-                                src={event.organizer.profileImage}
-                                alt={event.organizer.fullName}
-                                className="organizer-avatar"
-                              />
-                            )}
-                            <span>{event.organizer.fullName}</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </a>
-                ))}
-              </div>
-
-              {/* Pagination */}
-              {pages > 1 && (
-                <div className="pagination">
-                  <button
-                    onClick={() => goToPage(page - 1)}
-                    disabled={page === 1}
-                    className="pagination-btn"
-                  >
-                    ← Previous
-                  </button>
-
-                  <div className="page-numbers">
-                    {Array.from({ length: pages }, (_, i) => i + 1).map(
-                      (pageNum) => (
-                        <button
-                          key={pageNum}
-                          onClick={() => goToPage(pageNum)}
-                          className={`page-number ${
-                            page === pageNum ? 'active' : ''
-                          }`}
-                        >
-                          {pageNum}
-                        </button>
-                      )
+            <h2 className="gdg-event-title">{demoEvent.title}</h2>
+            <div className="gdg-event-tags">
+              {demoEvent.tags && demoEvent.tags.map((tag, idx) => (
+                <span key={idx} className="gdg-tag-chip">{tag}</span>
+              ))}
+              {demoEvent.category && <span className="gdg-tag-chip">{demoEvent.category}</span>}
+              {demoEvent.eventType && <span className="gdg-tag-chip">{demoEvent.eventType}</span>}
+            </div>
+            <p className="gdg-event-desc">{demoEvent.shortDescription}</p>
+            <div style={{ marginTop: '8px' }}>
+              <button onClick={() => navigate(`/event/${demoEvent._id}`)} className="gdg-view-details-btn">View details</button>
+            </div>
+          </div>
+        </div>
+        {error && <div className="gdg-error-message">{error}</div>}
+        {loading ? (
+          <div className="gdg-loading-spinner">
+            <div className="spinner"></div>
+            <p>Loading events...</p>
+          </div>
+        ) : events.length > 0 ? (
+          <>
+            {events.map(event => (
+              <div key={event._id} className="gdg-event-card">
+                <div className="gdg-event-logo">
+                  {event.coverImage ? (
+                    <img src={event.coverImage} alt={event.title} />
+                  ) : (
+                    <div className="gdg-event-logo-placeholder">{event.title[0]}</div>
+                  )}
+                </div>
+                <div className="gdg-event-main">
+                  <div className="gdg-event-meta-top">
+                    <span className="gdg-event-date">{formatDate(event.startDate)}</span>
+                    {event.location?.venue && (
+                      <span className="gdg-event-location">- {event.location.venue}</span>
                     )}
                   </div>
-
-                  <button
-                    onClick={() => goToPage(page + 1)}
-                    disabled={page === pages}
-                    className="pagination-btn"
-                  >
-                    Next →
-                  </button>
+                  <h2 className="gdg-event-title">{event.title}</h2>
+                  <div className="gdg-event-tags">
+                    {event.tags && event.tags.map((tag, idx) => (
+                      <span key={idx} className="gdg-tag-chip">{tag}</span>
+                    ))}
+                    {event.category && <span className="gdg-tag-chip">{event.category}</span>}
+                    {event.eventType && <span className="gdg-tag-chip">{event.eventType}</span>}
+                  </div>
+                  <p className="gdg-event-desc">{event.shortDescription || event.description?.substring(0, 120)}...</p>
+                  <a href={`/event/${event._id}`} className="gdg-view-details-btn">View details</a>
                 </div>
-              )}
-            </>
-          ) : (
-            <div className="empty-state">
-              <p>No events found</p>
-              <p>Try adjusting your filters</p>
-            </div>
-          )}
-        </main>
-      </div>
+              </div>
+            ))}
+          </>
+        ) : (
+          <div className="gdg-empty-state">
+            <p>No events found</p>
+            <p>Try adjusting your filters</p>
+          </div>
+        )}
+      </main>
+      {/* Pagination */}
+      {pages > 1 && (
+        <div className="gdg-pagination">
+          <button
+            onClick={() => goToPage(page - 1)}
+            disabled={page === 1}
+            className="gdg-pagination-btn"
+          >
+            ← Previous
+          </button>
+          <div className="gdg-page-numbers">
+            {Array.from({ length: pages }, (_, i) => i + 1).map(
+              (pageNum) => (
+                <button
+                  key={pageNum}
+                  onClick={() => goToPage(pageNum)}
+                  className={`gdg-page-number ${page === pageNum ? 'active' : ''}`}
+                >
+                  {pageNum}
+                </button>
+              )
+            )}
+          </div>
+          <button
+            onClick={() => goToPage(page + 1)}
+            disabled={page === pages}
+            className="gdg-pagination-btn"
+          >
+            Next →
+          </button>
+        </div>
+      )}
     </div>
   );
 }

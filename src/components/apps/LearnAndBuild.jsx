@@ -1,76 +1,353 @@
 import React, { useState, useEffect } from 'react';
-import { BookOpen, Code, Terminal, Rocket, CheckCircle, Clock, Users, Play, Edit, Trash2, Plus, Search, Filter, ChevronRight, ArrowLeft, Star, Lock, Unlock } from 'lucide-react';
+import { 
+  BookOpen, 
+  Code, 
+  Terminal, 
+  Rocket, 
+  CheckCircle, 
+  Clock, 
+  Users, 
+  Play, 
+  PlayCircle,
+  Edit, 
+  Trash2, 
+  Plus, 
+  Search, 
+  Filter, 
+  ChevronRight, 
+  ArrowLeft, 
+  Star, 
+  Lock, 
+  Unlock,
+  TrendingUp,
+  Award,
+  Calendar,
+  BarChart3,
+  User,
+  Bell,
+  Settings,
+  Home,
+  Target,
+  MessageSquare,
+  Crown,
+  Video,
+  DollarSign,
+  ThumbsUp,
+  ChevronDown,
+  Menu,
+  X
+} from 'lucide-react';
 import './LearnAndBuild.css';
 
 const LearnAndBuild = ({ onClose, user, isAdmin = false }) => {
-  const [activeView, setActiveView] = useState('content'); // content only
+  console.log('LearnAndBuild component mounted');
+  
+  const [activeNav, setActiveNav] = useState('dashboard');
   const [selectedTopic, setSelectedTopic] = useState(null);
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [selectedLesson, setSelectedLesson] = useState(null);
+  const [learningMode, setLearningMode] = useState('content'); // 'content' or 'video'
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
   const [isEditMode, setIsEditMode] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [userProgress, setUserProgress] = useState({
+    completedCourses: 12,
+    totalCourses: 25,
+    weeklyWatchTime: 8.5,
+    currentStreak: 7,
+    achievements: 15,
+    totalWatchTime: 156
+  });
   const [topics, setTopics] = useState([]);
+  const [courses, setCourses] = useState([]);
+  const [lessons, setLessons] = useState([]);
   const [completedTopics, setCompletedTopics] = useState(new Set());
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Sample data - in real app this would come from API
+  // Enhanced sample data with courses and lessons
   useEffect(() => {
-    setTopics([
+    // Lessons with YouTube videos
+    setLessons([
       {
         id: 1,
-        title: 'Git Fundamentals',
-        category: 'version-control',
-        difficulty: 'beginner',
-        duration: '45 min',
-        description: 'Learn the basics of Git version control',
-        icon: <Terminal className="w-5 h-5" />,
-        steps: [
-          { title: 'Introduction to Git', content: 'Git is a distributed version control system...', type: 'text' },
-          { title: 'Basic Commands', content: 'git init, git add, git commit...', commands: ['git init', 'git add .', 'git commit -m "Initial commit"'], type: 'commands' },
-          { title: 'Branching', content: 'Understanding branches and merging...', type: 'text' },
-          { title: 'Practice Exercise', content: 'Create your first repository...', type: 'exercise' }
-        ],
-        relatedProject: 'Personal Portfolio'
+        title: 'Introduction to React',
+        category: 'frontend',
+        description: 'Learn the basics of React programming',
+        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+        duration: '15 min',
+        addedBy: 'Sarah Johnson',
+        addedDate: '2024-01-15',
+        tags: ['react', 'javascript', 'frontend']
       },
       {
         id: 2,
-        title: 'React Components',
-        category: 'frontend',
-        difficulty: 'intermediate',
-        duration: '90 min',
-        description: 'Master React components and props',
-        icon: <Code className="w-5 h-5" />,
-        steps: [
-          { title: 'Component Basics', content: 'Understanding functional components...', type: 'text' },
-          { title: 'Props and State', content: 'How to pass data and manage state...', type: 'text' },
-          { title: 'Hooks Deep Dive', content: 'useState, useEffect, and custom hooks...', type: 'text' },
-          { title: 'Build a Component', content: 'Create a reusable card component...', type: 'exercise' }
-        ],
-        relatedProject: 'Task Manager App'
+        title: 'Git Fundamentals',
+        category: 'version-control',
+        description: 'Understanding Git version control basics',
+        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+        duration: '20 min',
+        addedBy: 'Mike Chen',
+        addedDate: '2024-01-14',
+        tags: ['git', 'version-control', 'development']
       },
       {
         id: 3,
-        title: 'Deployment Basics',
-        category: 'devops',
-        difficulty: 'intermediate',
-        duration: '60 min',
-        description: 'Deploy your applications to production',
-        icon: <Rocket className="w-5 h-5" />,
-        steps: [
-          { title: 'Deployment Concepts', content: 'Understanding deployment pipelines...', type: 'text' },
-          { title: 'Vercel Deployment', content: 'Deploy React apps to Vercel...', commands: ['npm run build', 'vercel --prod'], type: 'commands' },
-          { title: 'Environment Variables', content: 'Managing environment variables...', type: 'text' },
-          { title: 'Deploy Your App', content: 'Deploy your first application...', type: 'exercise' }
-        ],
-        relatedProject: 'Blog Platform'
+        title: 'CSS Grid Layout',
+        category: 'frontend',
+        description: 'Master CSS Grid for modern layouts',
+        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+        duration: '25 min',
+        addedBy: 'Alex Kumar',
+        addedDate: '2024-01-13',
+        tags: ['css', 'grid', 'layout']
       }
     ]);
+
+    // Comprehensive courses with content and video options
+    setCourses([
+      {
+        id: 1,
+        title: 'Git & GitHub Fundamentals',
+        category: 'version-control',
+        difficulty: 'beginner',
+        duration: '8 hours',
+        instructor: 'Mike Chen',
+        rating: 4.9,
+        students: 3456,
+        price: 69.99,
+        image: 'https://picsum.photos/seed/gitcourse/400/250',
+        description: 'Complete guide to Git version control and GitHub collaboration',
+        progress: 40,
+        timeLeft: '4h 45min',
+        topics: [
+          {
+            id: 1,
+            title: 'Introduction to Version Control',
+            content: {
+              text: 'Version control is a system that records changes to a file or set of files over time so that you can recall specific versions later. Git is a distributed version control system, which means that every developer has a full copy of the entire project history on their local machine.',
+              notes: `# Version Control Basics
+
+## What is Version Control?
+- System that tracks changes in files over time
+- Allows collaboration among multiple developers
+- Maintains history of all changes
+
+## Why Use Version Control?
+- **Backup**: Every change is recorded
+- **Collaboration**: Multiple people can work together
+- **Tracking**: Know who changed what and when
+- **Recovery**: Go back to previous versions if needed`,
+              codeExamples: [
+                {
+                  title: 'Basic Git Commands',
+                  code: `# Initialize a new repository
+git init
+
+# Check status
+git status
+
+# Add files to staging
+git add filename.txt
+git add . # Add all files
+
+# Commit changes
+git commit -m "Your commit message"`
+                }
+              ]
+            },
+            videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+            duration: '45 min',
+            completed: false
+          },
+          {
+            id: 2,
+            title: 'Basic Git Commands',
+            content: {
+              text: 'Learn the fundamental Git commands that you\'ll use every day. These commands form the foundation of your Git workflow and are essential for any developer working with version control.',
+              notes: `# Basic Git Commands
+
+## Essential Commands
+
+### git init
+Initializes a new Git repository in the current directory.
+
+### git status
+Shows the status of changes in the working directory.
+
+### git add
+Adds files to the staging area.
+
+### git commit
+Records changes to the repository.
+
+### git push
+Pushes changes to a remote repository.`,
+              codeExamples: [
+                {
+                  title: 'Daily Git Workflow',
+                  code: `# 1. Check current status
+git status
+
+# 2. Add changes
+git add .
+
+# 3. Commit with descriptive message
+git commit -m "feat: Add user authentication feature"
+
+# 4. Push to remote
+git push origin main`
+                }
+              ]
+            },
+            videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+            duration: '60 min',
+            completed: false
+          },
+          {
+            id: 3,
+            title: 'Working with Branches',
+            content: {
+              text: 'Branching is one of Git\'s most powerful features. Learn how to create, switch between, and merge branches to manage different features and fixes in your project.',
+              notes: `# Git Branches
+
+## What are Branches?
+Branches are independent lines of development that diverge from the main codebase.
+
+## Branch Commands
+
+### Create a new branch
+\`\`\`bash
+git branch feature-name
+\`\`\`
+
+### Switch to a branch
+\`\`\`bash
+git checkout feature-name
+\`\`\`
+
+### Create and switch in one command
+\`\`\`bash
+git checkout -b feature-name
+\`\`\``,
+              codeExamples: [
+                {
+                  title: 'Branch Workflow',
+                  code: `# Create and switch to new branch
+git checkout -b feature/user-login
+
+# Make changes and commit
+git add .
+git commit -m "Add login form"
+
+# Switch back to main
+git checkout main
+
+# Merge the feature
+git merge feature/user-login`
+                }
+              ]
+            },
+            videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+            duration: '90 min',
+            completed: false
+          }
+        ]
+      },
+      {
+        id: 2,
+        title: 'React Development Mastery',
+        category: 'frontend',
+        difficulty: 'intermediate',
+        duration: '12 hours',
+        instructor: 'Sarah Johnson',
+        rating: 4.8,
+        students: 2341,
+        price: 89.99,
+        image: 'https://picsum.photos/seed/reactcourse/400/250',
+        description: 'Master React from basics to advanced concepts including hooks and state management',
+        progress: 25,
+        timeLeft: '6h 30min',
+        topics: [
+          {
+            id: 1,
+            title: 'React Fundamentals',
+            content: {
+              text: 'React is a JavaScript library for building user interfaces. Learn the core concepts including components, props, and state.',
+              notes: `# React Fundamentals
+
+## What is React?
+- JavaScript library for building UIs
+- Created by Facebook
+- Component-based architecture
+- Virtual DOM for performance
+
+## Key Concepts
+
+### Components
+Reusable building blocks that encapsulate HTML, CSS, and JavaScript.
+
+### Props
+Read-only data passed from parent to child components.
+
+### State
+Mutable data that can trigger re-renders when changed.`,
+              codeExamples: [
+                {
+                  title: 'Functional Component',
+                  code: `import React, { useState } from 'react';
+
+function Welcome({ name }) {
+  const [count, setCount] = useState(0);
+  
+  return (
+    <div>
+      <h1>Hello, {name}!</h1>
+      <p>You clicked {count} times</p>
+      <button onClick={() => setCount(count + 1)}>
+        Click me
+      </button>
+    </div>
+  );
+}
+
+export default Welcome;`
+                }
+              ]
+            },
+            videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+            duration: '75 min',
+            completed: false
+          }
+        ]
+      }
+    ]);
+    setIsLoading(false);
   }, []);
 
-  const filteredTopics = topics.filter(topic => {
-    const matchesSearch = topic.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         topic.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = filterCategory === 'all' || topic.category === filterCategory;
+  const navItems = [
+    { id: 'dashboard', label: 'Dashboard', icon: Home },
+    { id: 'lessons', label: 'Lessons', icon: PlayCircle },
+    { id: 'courses', label: 'Courses', icon: BookOpen },
+  ];
+
+  const filteredLessons = lessons.filter(lesson => {
+    const matchesSearch = lesson.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         lesson.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = filterCategory === 'all' || lesson.category === filterCategory;
     return matchesSearch && matchesCategory;
   });
+
+  const filteredCourses = courses.filter(course => {
+    const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         course.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         course.instructor.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = filterCategory === 'all' || course.category === filterCategory;
+    return matchesSearch && matchesCategory;
+  });
+
+  const inProgressCourses = courses.filter(course => course.progress > 0 && course.progress < 100);
+  const recommendedCourses = courses.filter(course => course.progress === 0).slice(0, 3);
 
   const handleTopicClick = (topic) => {
     setSelectedTopic(topic);
@@ -91,114 +368,392 @@ const LearnAndBuild = ({ onClose, user, isAdmin = false }) => {
     console.log(`Starting project: ${projectName}`);
   };
 
-  const renderTopicsList = () => (
-    <div className="learn-build-container">
-      <div className="learn-build-header">
-        <div className="header-left">
-          <div>
-            <p>Master new skills and build amazing projects</p>
+  const handleEnrollCourse = (courseId) => {
+    // Handle course enrollment
+    const course = topics.find(t => t.id === courseId);
+    if (course) {
+      setTopics(prev => prev.map(t => 
+        t.id === courseId 
+          ? { ...t, progress: 1, timeLeft: `${t.duration} left` }
+          : t
+      ));
+    }
+  };
+
+  const handleCourseClick = (course) => {
+    // Handle course card click - could navigate to course details
+    setSelectedTopic(course);
+    setActiveNav('lessons');
+  };
+
+  const handleNavClick = (navId) => {
+    setActiveNav(navId);
+    // Could add navigation logic here
+  };
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
+  // Simulate real-time updates
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setUserProgress(prev => ({
+        ...prev,
+        weeklyWatchTime: prev.weeklyWatchTime + 0.1
+      }));
+    }, 60000); // Update every minute
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  const renderSidebar = () => (
+    <div className={`sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
+      <div className="sidebar-header">
+        <div className="logo">
+          <div className="logo-icon">
+            <BookOpen className="w-6 h-6" />
           </div>
+          <span className="logo-text">Learn & Build</span>
         </div>
-        
+        <button 
+          className="sidebar-toggle"
+          onClick={toggleSidebar}
+        >
+          {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        </button>
+      </div>
+      
+      <nav className="sidebar-nav">
+        {navItems.map(item => (
+          <button
+            key={item.id}
+            className={`nav-item ${activeNav === item.id ? 'active' : ''}`}
+            onClick={() => handleNavClick(item.id)}
+          >
+            <item.icon className="w-5 h-5" />
+            <span className="nav-label">{item.label}</span>
+            {item.badge && (
+              <span className="nav-badge">{item.badge}</span>
+            )}
+          </button>
+        ))}
+      </nav>
+    </div>
+  );
+
+  const renderLessonsView = () => (
+    <div className="lessons-container">
+      <div className="section-header">
+        <h2>Video Lessons</h2>
         {isAdmin && (
-          <button onClick={() => setIsEditMode(!isEditMode)} className="edit-mode-btn">
-            <Edit className="w-4 h-4" />
-            {isEditMode ? 'Exit Edit' : 'Edit Mode'}
+          <button className="add-lesson-btn">
+            <Plus className="w-4 h-4" />
+            Add Lesson
           </button>
         )}
       </div>
-
-      <div className="content-controls">
-        <div className="search-filter">
+      
+      <div className="lessons-grid">
+        {filteredLessons.map(lesson => (
+          <div key={lesson.id} className="lesson-card" onClick={() => setSelectedLesson(lesson)}>
+            <div className="lesson-thumbnail">
+              <div className="video-preview">
+                <Video className="w-12 h-12" />
+              </div>
+              <span className="duration-badge">{lesson.duration}</span>
+            </div>
+            <div className="lesson-content">
+              <h3>{lesson.title}</h3>
+              <p>{lesson.description}</p>
+              <div className="lesson-meta">
+                <span className="added-by">Added by {lesson.addedBy}</span>
+                <span className="added-date">{lesson.addedDate}</span>
+              </div>
+              <div className="lesson-tags">
+                {lesson.tags.map(tag => (
+                  <span key={tag} className="tag">{tag}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      {selectedLesson && (
+        <div className="lesson-view-modal">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h3>{selectedLesson.title}</h3>
+              <button className="close-modal" onClick={() => setSelectedLesson(null)}>
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="video-container">
+              <iframe
+                src={selectedLesson.videoUrl}
+                title={selectedLesson.title}
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+            <div className="lesson-details">
+              <p>{selectedLesson.description}</p>
+              <div className="lesson-info">
+                <span>Duration: {selectedLesson.duration}</span>
+                <span>Added by: {selectedLesson.addedBy}</span>
+                <span>Date: {selectedLesson.addedDate}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+  const renderCoursesView = () => (
+    <div className="courses-container">
+      <div className="section-header">
+        <h2>Courses</h2>
+        {isAdmin && (
+          <button className="add-course-btn">
+            <Plus className="w-4 h-4" />
+            Add Course
+          </button>
+        )}
+      </div>
+      
+      <div className="courses-grid">
+        {filteredCourses.map(course => (
+          <div key={course.id} className="course-card" onClick={() => setSelectedCourse(course)}>
+            <div className="course-image">
+              <img src={course.image} alt={course.title} />
+              <div className="course-overlay">
+                <BookOpen className="w-8 h-8" />
+              </div>
+              {course.progress > 0 && (
+                <div className="progress-badge">
+                  {course.progress}%
+                </div>
+              )}
+            </div>
+            <div className="course-content">
+              <h3>{course.title}</h3>
+              <p>{course.description}</p>
+              <div className="course-meta">
+                <span className="instructor">{course.instructor}</span>
+                <span className="rating">
+                  <Star className="w-4 h-4" />
+                  {course.rating}
+                </span>
+              </div>
+              <div className="course-stats">
+                <span className="duration">
+                  <Clock className="w-4 h-4" />
+                  {course.duration}
+                </span>
+                <span className="students">
+                  <Users className="w-4 h-4" />
+                  {course.students} students
+                </span>
+              </div>
+              {course.progress > 0 && (
+                <div className="course-progress">
+                  <div className="progress-bar">
+                    <div 
+                      className="progress-fill"
+                      style={{ width: `${course.progress}%` }}
+                    />
+                  </div>
+                  <span className="progress-text">{course.progress}% Complete</span>
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      {selectedCourse && (
+        <div className="course-view-modal">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h3>{selectedCourse.title}</h3>
+              <button className="close-modal" onClick={() => setSelectedCourse(null)}>
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <div className="learning-mode-selector">
+              <button 
+                className={`mode-btn ${learningMode === 'content' ? 'active' : ''}`}
+                onClick={() => setLearningMode('content')}
+              >
+                <BookOpen className="w-4 h-4" />
+                Content Learning
+              </button>
+              <button 
+                className={`mode-btn ${learningMode === 'video' ? 'active' : ''}`}
+                onClick={() => setLearningMode('video')}
+              >
+                <Video className="w-4 h-4" />
+                Video Learning
+              </button>
+            </div>
+            
+            <div className="course-topics">
+              {selectedCourse.topics.map(topic => (
+                <div key={topic.id} className="topic-item">
+                  <div className="topic-header">
+                    <h4>{topic.title}</h4>
+                    <span className="topic-duration">{topic.duration}</span>
+                  </div>
+                  
+                  {learningMode === 'content' ? (
+                    <div className="content-learning">
+                      <div className="topic-text">
+                        <p>{topic.content.text}</p>
+                      </div>
+                      
+                      {topic.content.notes && (
+                        <div className="topic-notes">
+                          <h5>Notes</h5>
+                          <pre className="notes-content">{topic.content.notes}</pre>
+                        </div>
+                      )}
+                      
+                      {topic.content.codeExamples && topic.content.codeExamples.map((example, idx) => (
+                        <div key={idx} className="code-example">
+                          <h6>{example.title}</h6>
+                          <pre className="code-block">
+                            <code>{example.code}</code>
+                          </pre>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="video-learning">
+                      <div className="video-container">
+                        <iframe
+                          src={topic.videoUrl}
+                          title={topic.title}
+                          frameBorder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+  const renderDashboard = () => (
+    <div className="dashboard-container">
+      <div className="dashboard-header">
+        <div className="header-left">
+          <h1>Learning Center</h1>
           <div className="search-bar">
             <Search className="w-5 h-5" />
             <input
               type="text"
-              placeholder="Search topics..."
+              placeholder="Search courses and lessons..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          
-          <div className="filter-dropdown">
-            <Filter className="w-4 h-4" />
-            <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)}>
-              <option value="all">All Categories</option>
-              <option value="version-control">Version Control</option>
-              <option value="frontend">Frontend</option>
-              <option value="backend">Backend</option>
-              <option value="devops">DevOps</option>
-            </select>
+        </div>
+        <div className="header-right">
+          <button className="notifications-btn">
+            <Bell className="w-5 h-5" />
+            <span className="notification-badge">3</span>
+          </button>
+          <div className="user-profile">
+            <div className="user-avatar">
+              <User className="w-6 h-6" />
+            </div>
           </div>
         </div>
+      </div>
 
-              </div>
-
-      <div className="content-grid">
-        <div className="topics-grid">
-          {filteredTopics.map(topic => (
-              <div key={topic.id} className="topic-card">
-                <div className="topic-header">
-                  <div className="topic-icon">{topic.icon}</div>
-                  <div className="topic-meta">
-                    <span className={`difficulty ${topic.difficulty}`}>{topic.difficulty}</span>
-                    <span className="duration"><Clock className="w-3 h-3" /> {topic.duration}</span>
-                  </div>
-                  {completedTopics.has(topic.id) && (
-                    <div className="completed-badge">
-                      <CheckCircle className="w-4 h-4" />
+      <div className="dashboard-content">
+        <div className="main-content">
+          <section className="continue-learning">
+            <h2>Continue Learning</h2>
+            <div className="courses-grid">
+              {inProgressCourses.map(course => (
+                <div key={course.id} className="course-card in-progress" onClick={() => {setSelectedCourse(course); setActiveNav('courses');}}>
+                  <div className="course-image">
+                    <img src={course.image} alt={course.title} />
+                    <div className="course-overlay">
+                      <BookOpen className="w-8 h-8" />
                     </div>
-                  )}
-                </div>
-                
-                <div className="topic-content">
-                  <h3>{topic.title}</h3>
-                  <p>{topic.description}</p>
-                  
-                  <div className="topic-stats">
-                    <span><BookOpen className="w-3 h-3" /> {topic.steps.length} steps</span>
-                    {topic.relatedProject && (
-                      <span><Code className="w-3 h-3" /> {topic.relatedProject}</span>
-                    )}
+                  </div>
+                  <div className="course-content">
+                    <h3>{course.title}</h3>
+                    <div className="course-meta">
+                      <span className="instructor">{course.instructor}</span>
+                      <span className="rating">
+                        <Star className="w-4 h-4" />
+                        {course.rating}
+                      </span>
+                    </div>
+                    <div className="course-progress">
+                      <div className="progress-bar">
+                        <div 
+                          className="progress-fill"
+                          style={{ width: `${course.progress}%` }}
+                        />
+                      </div>
+                      <span className="progress-text">{course.progress}% Complete</span>
+                    </div>
+                    <div className="course-stats">
+                      <span className="time-left">
+                        <Clock className="w-4 h-4" />
+                        {course.timeLeft} left
+                      </span>
+                    </div>
                   </div>
                 </div>
+              ))}
+            </div>
+          </section>
 
-                <div className="topic-actions">
-                  <button onClick={() => handleTopicClick(topic)} className="primary-btn">
-                    Start Learning
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                  
-                  {isEditMode && (
-                    <div className="edit-actions">
-                      <button className="edit-btn"><Edit className="w-3 h-3" /></button>
-                      <button className="delete-btn"><Trash2 className="w-3 h-3" /></button>
+          <section className="recommended-courses">
+            <h2>Recommended Courses For You</h2>
+            <div className="courses-grid">
+              {recommendedCourses.map(course => (
+                <div key={course.id} className="course-card recommended" onClick={() => {setSelectedCourse(course); setActiveNav('courses');}}>
+                  <div className="course-image">
+                    <img src={course.image} alt={course.title} />
+                    <div className="course-overlay">
+                      <BookOpen className="w-8 h-8" />
                     </div>
-                  )}
-                  
-                  {!isEditMode && (
-                    <button 
-                      onClick={() => handleMarkComplete(topic.id)}
-                      className={`complete-btn ${completedTopics.has(topic.id) ? 'completed' : ''}`}
-                    >
-                      {completedTopics.has(topic.id) ? (
-                        <><CheckCircle className="w-4 h-4" /> Completed</>
-                      ) : (
-                        <><Lock className="w-4 h-4" /> Mark Complete</>
-                      )}
-                    </button>
-                  )}
+                  </div>
+                  <div className="course-content">
+                    <h3>{course.title}</h3>
+                    <div className="course-meta">
+                      <span className="instructor">{course.instructor}</span>
+                      <span className="rating">
+                        <Star className="w-4 h-4" />
+                        {course.rating}
+                      </span>
+                    </div>
+                    <div className="course-footer">
+                      <span className="price">${course.price}</span>
+                      <button className="enroll-btn" onClick={(e) => { e.stopPropagation(); handleEnrollCourse(course.id); }}>
+                        Enroll Now
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
-            
-            {isEditMode && (
-              <div className="add-new-card">
-                <Plus className="w-8 h-8" />
-                <p>Add New Topic</p>
-              </div>
-            )}
-          </div>
+              ))}
+            </div>
+          </section>
+        </div>
       </div>
     </div>
   );
@@ -294,7 +849,38 @@ const LearnAndBuild = ({ onClose, user, isAdmin = false }) => {
     );
   };
 
-  return selectedTopic ? renderContentView() : renderTopicsList();
+  return (
+    <div className="learn-build-app">
+      {isLoading ? (
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          height: '100vh',
+          fontSize: '1.5rem',
+          color: '#000000'
+        }}>
+          Loading Learn & Build...
+        </div>
+      ) : (
+        <>
+          {renderSidebar()}
+          
+          <div className="main-content-area">
+            {activeNav === 'dashboard' && renderDashboard()}
+            {activeNav === 'lessons' && renderLessonsView()}
+            {activeNav === 'courses' && renderCoursesView()}
+            {!['dashboard', 'lessons', 'courses'].includes(activeNav) && (
+              <div style={{ padding: '2rem', textAlign: 'center' }}>
+                <h2>Page not found</h2>
+                <p>Please select a valid navigation item</p>
+              </div>
+            )}
+          </div>
+        </>
+      )}
+    </div>
+  );
 };
 
 export default LearnAndBuild;

@@ -40,12 +40,6 @@ export default function Login() {
         return;
       }
 
-      if (!formData.email.includes('@')) {
-        setError('Please enter a valid email');
-        setLoading(false);
-        return;
-      }
-
       // Make login request
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/auth/login`,
@@ -68,6 +62,9 @@ export default function Login() {
 
       // Store token and user data
       const { token, user } = response.data;
+      console.log('✅ Login response received:', { hasToken: !!token, user });
+      console.log('👤 User role:', user?.role);
+
       localStorage.setItem('authToken', token);
       localStorage.setItem('user', JSON.stringify(user));
 
@@ -81,23 +78,24 @@ export default function Login() {
       }
 
       setSuccess('Login successful! Redirecting...');
-      
+
       // Get the intended redirect URL or use default based on role
       const redirectPath = localStorage.getItem('redirectPath');
-      
+
       // Redirect based on user role or intended path
       setTimeout(() => {
         if (redirectPath) {
           localStorage.removeItem('redirectPath');
+          console.log('🔄 Redirecting to saved path:', redirectPath);
           navigate(redirectPath);
-        } else if (user.role === 'admin') {
-          navigate('/admin/dashboard');
-        } else if (user.role === 'coordinator') {
-          navigate('/coordinator/dashboard');
+        } else if (user.role === 'admin' || user.role === 'coordinator') {
+          console.log('🔄 Redirecting to admin dashboard');
+          navigate('/admin/dashboard', { replace: true });
         } else {
-          navigate('/student/dashboard');
+          console.log('🔄 Redirecting to student dashboard');
+          navigate('/student/dashboard', { replace: true });
         }
-      }, 1000);
+      }, 1500);
     } catch (err) {
       const errorMessage = err.response?.data?.message || 'Login failed. Please try again.';
       setError(errorMessage);
@@ -132,18 +130,18 @@ export default function Login() {
 
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
-            <label htmlFor="email">Email Address</label>
+            <label htmlFor="email">Email or Username</label>
             <input
-              type="email"
+              type="text"
               id="email"
               name="email"
-              placeholder="your@gmail.com"
+              placeholder="your@gmail.com or username"
               value={rememberEmail && wasRemembered ? rememberEmail : formData.email}
               onChange={handleChange}
               disabled={loading}
               autoFocus
             />
-            <small>Use your registered email</small>
+            <small>Use your registered email or username</small>
           </div>
 
           <div className="form-group">

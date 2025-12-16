@@ -90,17 +90,17 @@ export default function CreateProject() {
   };
 
   return (
-    <div className="create-project-container">
-      <div className="create-project-box">
-        <div className="create-project-header">
-          <h1>Create New Project</h1>
-          <p>Share your amazing project with the community</p>
-        </div>
+    <div className="create-project-page">
+      <div className="create-project-header">
+        <h1>Create New Project</h1>
+        <p>Share your amazing project with the AID-X community</p>
+      </div>
 
-        {error && <div className="alert alert-error">{error}</div>}
-        {success && <div className="alert alert-success">{success}</div>}
+      <form onSubmit={handleSubmit} className="create-project-form">
+        <div className="form-container">
+          {error && <div className="error-message">{error}</div>}
+          {success && <div className="success-message">{success}</div>}
 
-        <form onSubmit={handleSubmit} className="create-project-form">
           <div className="form-row">
             <div className="form-group">
               <label htmlFor="title">Project Title *</label>
@@ -255,22 +255,22 @@ export default function CreateProject() {
           <div className="form-actions">
             <button
               type="button"
-              onClick={() => navigate('/projects')}
-              className="btn-cancel"
+              onClick={() => navigate('/admin/dashboard')}
+              className="btn btn-secondary"
               disabled={loading}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="btn-submit"
+              className="btn btn-primary"
               disabled={loading}
             >
               {loading ? 'Creating...' : 'Create Project'}
             </button>
           </div>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
   );
 }

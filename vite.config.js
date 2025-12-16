@@ -10,4 +10,22 @@ export default defineConfig({
     }),
   ],
   assetsInclude: ["**/*.lottie"],
+  server: {
+    host: true,
+    port: 5173,
+    fs: {
+      strict: false,
+    },
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          router: ['react-router-dom'],
+          ui: ['lucide-react', 'framer-motion'],
+        },
+      },
+    },
+  },
 });
