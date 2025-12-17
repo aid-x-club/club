@@ -24,19 +24,13 @@ const hero = () => {
   const handleRegisterClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("JOIN CLUB clicked - isAuthenticated:", isAuthenticated);
+    console.log("BROWSE EVENTS clicked - navigating to /events");
     ReactGA.event({
       category: "Button",
       action: "click",
-      label: "join_club",
+      label: "browse_events",
     });
-    if (isAuthenticated) {
-      console.log("Navigating to /events");
-      navigate("/events");
-    } else {
-      console.log("Navigating to /login");
-      navigate("/login");
-    }
+    navigate("/events");
   };
   const handleCardClicks = (card) => {
     ReactGA.event({
@@ -124,7 +118,7 @@ const hero = () => {
 
             <div className="register_now" onClick={handleRegisterClick} style={{ cursor: 'pointer' }}>
               <div>
-                <span>JOIN CLUB </span>
+                <span>BROWSE EVENTS </span>
               </div>
               <div>
                 {" "}
@@ -175,13 +169,7 @@ const hero = () => {
               >
                 Activities <ArrowRightWhite className="arrow-right-icon" />
               </p>
-              <p className="text3" onClick={() => {
-                if (isAuthenticated) {
-                  navigate("/events");
-                } else {
-                  navigate("/login");
-                }
-              }}>
+              <p className="text3" onClick={() => navigate("/events")}>
                 Events <ArrowRightWhite className="arrow-right-icon" />
               </p>
             </div>

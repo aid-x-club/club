@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  background: url('/images/bg6.webp') center/cover no-repeat fixed;
+  background: url('/images/bg11.webp') center/cover no-repeat fixed;
   position: relative;
   overflow: hidden;
   padding: 2vw;
@@ -65,6 +65,7 @@
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -119,6 +120,7 @@
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
