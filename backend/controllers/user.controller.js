@@ -8,7 +8,7 @@ import User from '../models/User.js';
 export const getCurrentUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.userId);
-    
+
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
@@ -23,39 +23,56 @@ export const getCurrentUser = async (req, res, next) => {
 };
 
 /**
- * @route   PUT /api/users/me
+ * @route   PUT /api/users/me or PUT /api/users/:id
  * @desc    Update user profile
  * @access  Private
  */
 export const updateProfile = async (req, res, next) => {
   try {
-    const { fullName, bio, phone, profileImage, year, section } = req.body;
+    const { name, email, rollNumber, bio, fullName, phone, profileImage, year, section, preferences } = req.body;
+
+    // Determine which user ID to use (from params or from token)
+    const userId = req.params.id || req.user.userId;
+
+    // Build update object
+    const updateData = {};
+    if (name) updateData.name = name;
+    if (email) updateData.email = email;
+    if (rollNumber !== undefined) updateData.rollNumber = rollNumber;
+    if (bio !== undefined) updateData.bio = bio;
+    if (fullName) updateData.fullName = fullName;
+    if (phone) updateData.phone = phone;
+    if (profileImage) updateData.profileImage = profileImage;
+    if (year) updateData.year = year;
+    if (section) updateData.section = section;
+    if (preferences) updateData.notificationPreferences = preferences;
+
+    updateData.updatedAt = new Date();
 
     const user = await User.findByIdAndUpdate(
-      req.user.userId,
-      {
-        fullName: fullName || undefined,
-        bio: bio || undefined,
-        phone: phone || undefined,
-        profileImage: profileImage || undefined,
-        year: year || undefined,
-        section: section || undefined,
-        updatedAt: new Date()
-      },
+      userId,
+      updateData,
       { new: true, runValidators: true }
     );
 
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({
+        success: false,
+        error: 'User not found'
+      });
     }
 
     res.status(200).json({
       success: true,
       message: 'Profile updated successfully',
-      data: user.getPublicProfile()
+      data: user.getPublicProfile ? user.getPublicProfile() : user
     });
   } catch (error) {
-    next(error);
+    console.error('Update profile error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to update profile'
+    });
   }
 };
 
@@ -67,7 +84,7 @@ export const updateProfile = async (req, res, next) => {
 export const getUserProfile = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id);
-    
+
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
@@ -127,8 +144,8 @@ export const connectGitHub = async (req, res, next) => {
     const { githubUsername, githubAccessToken } = req.body;
 
     if (!githubUsername || !githubAccessToken) {
-      return res.status(400).json({ 
-        error: 'GitHub username and access token are required' 
+      return res.status(400).json({
+        error: 'GitHub username and access token are required'
       });
     }
 

@@ -68,4 +68,16 @@ router.post('/github/disconnect', protect, disconnectGitHub);
  */
 router.get('/:id', getUserProfile);
 
+/**
+ * PUT /api/users/:id
+ * Update user profile by ID (for admin/self)
+ */
+router.put('/:id', protect, updateProfile);
+
+/**
+ * PUT /api/users/:id/notifications
+ * Update user notification preferences
+ */
+router.put('/:id/notifications', protect, updateProfile);
+
 export default router;

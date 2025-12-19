@@ -75,6 +75,15 @@ const ProjectSchema = new mongoose.Schema(
       default: 'planning',
     },
 
+    // Approval status for admin review
+    approvalStatus: {
+      type: String,
+      enum: ['pending', 'approved', 'rejected'],
+      default: 'pending',
+    },
+
+    rejectionReason: String,
+
     // Links and resources
     repositoryUrl: {
       type: String,

@@ -1,209 +1,331 @@
-import {
-  exchangeOAuthCode,
-  getUserProfile,
-  generateInstallationToken,
-  createRepoFromTemplate,
-  addCollaborator,
-  verifyWebhookSignature,
-} from '../services/github.service.js';
+import GitHubService from '../services/github.service.js';
+import User from '../models/User.js';
+import crypto from 'crypto';
 
-/**
- * Initiate GitHub OAuth login
- * Redirects user to GitHub for authorization
- */
-export const initiateGitHubLogin = (req, res) => {
-  try {
-    const clientId = process.env.GITHUB_CLIENT_ID;
-    const redirectUri = process.env.GITHUB_CALLBACK_URL;
-
-    if (!clientId || !redirectUri) {
-      return res.status(500).json({ error: 'GitHub OAuth not configured' });
-    }
-
-    const scope = 'user:email read:user'; // Minimal scopes for user info
-    const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`;
-
-    res.json({ authUrl });
-  } catch (error) {
-    console.error('Error initiating GitHub login:', error);
-    res.status(500).json({ error: 'Failed to initiate GitHub login' });
+// Create service instance lazily (after env vars are loaded)
+let githubService = null;
+function getGitHubService() {
+  if (!githubService) {
+    githubService = new GitHubService();
   }
-};
+  return githubService;
+}
 
 /**
- * GitHub OAuth callback
- * Exchange authorization code for access token and retrieve user info
+ * Initiate GitHub OAuth flow
+ * GET /api/github/login
  */
-export const githubCallback = async (req, res) => {
+export const initiateGitHubLogin = async (req, res) => {
   try {
-    const { code } = req.query;
+    console.log('🔗 Initiating GitHub login...');
 
-    if (!code) {
-      return res.status(400).json({ error: 'Missing authorization code' });
-    }
+    // Generate a random state for CSRF protection
+    const state = crypto.randomBytes(16).toString('hex');
 
-    // Exchange code for access token
-    const accessToken = await exchangeOAuthCode(code);
+    // Store state in session or return it to frontend to store
+    const authUrl = getGitHubService().getAuthorizationUrl(state);
 
-    // Get user profile
-    const userProfile = await getUserProfile(accessToken);
-
-    // TODO: In production with Supabase, save/update user here
-    // For now, we return the profile and let frontend store it
+    console.log('✅ GitHub auth URL generated:', authUrl);
 
     res.json({
       success: true,
-      user: {
-        username: userProfile.username,
-        userId: userProfile.userId,
-        name: userProfile.name,
-        avatarUrl: userProfile.avatarUrl,
-        email: userProfile.email,
-      },
-      message: 'GitHub connected successfully',
+      authUrl,
+      state
     });
   } catch (error) {
-    console.error('Error in GitHub callback:', error);
-    res.status(500).json({ error: error.message || 'GitHub callback failed' });
+    console.error('❌ Error initiating GitHub login:', error);
+    console.error('Error stack:', error.stack);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to initiate GitHub login',
+      error: error.message
+    });
   }
 };
 
 /**
- * Create a new project repository from template
- * Only callable with valid GitHub installation
+ * Handle GitHub OAuth callback
+ * GET /api/github/callback
+ */
+export const handleGitHubCallback = async (req, res) => {
+  try {
+    console.log('📥 GitHub callback received');
+    console.log('  - User authenticated:', !!req.user);
+    console.log('  - req.user:', JSON.stringify(req.user));
+
+    const { code, state } = req.query;
+
+    if (!code) {
+      return res.status(400).json({
+        success: false,
+        message: 'Authorization code is required'
+      });
+    }
+
+    // Exchange code for access token
+    const accessToken = await getGitHubService().exchangeCodeForToken(code);
+    console.log('✅ Access token received');
+
+    // Get GitHub user information
+    const githubUser = await getGitHubService().getGitHubUser(accessToken);
+    console.log('✅ GitHub user fetched:', githubUser.username);
+
+    // Update user in database with GitHub information
+    if (req.user) {
+      // Handle different JWT payload structures
+      const userId = req.user.id || req.user.userId || req.user._id;
+      console.log('  - Extracted user ID:', userId);
+
+      const user = await User.findById(userId);
+      if (user) {
+        console.log('📝 Updating user in database...');
+        user.githubUsername = githubUser.username;
+        user.githubId = githubUser.id.toString();
+        user.githubConnected = true;
+        user.githubAvatarUrl = githubUser.avatarUrl;
+        await user.save();
+        console.log('✅ User updated successfully');
+      } else {
+        console.warn('⚠️  User not found in database');
+      }
+    } else {
+      console.warn('⚠️  No authenticated user in request');
+    }
+
+    res.json({
+      success: true,
+      message: 'GitHub account connected successfully',
+      githubUsername: githubUser.username,
+      githubId: githubUser.id,
+      githubConnected: true
+    });
+  } catch (error) {
+    console.error('❌ Error handling GitHub callback:', error);
+    console.error('Error stack:', error.stack);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Failed to connect GitHub account'
+    });
+  }
+};
+
+/**
+ * Create repository from template
+ * POST /api/github/create-project
  */
 export const createProjectRepository = async (req, res) => {
   try {
-    const { templateOwner, templateRepo, newRepoName, studentGithubUsername } = req.body;
+    const {
+      templateOwner = 'aid-x-club',
+      templateRepo,
+      newRepoName,
+      studentGithubUsername,
+      isPrivate = true
+    } = req.body;
 
-    // Validate required fields
-    if (!templateOwner || !templateRepo || !newRepoName || !studentGithubUsername) {
+    // Validation
+    if (!templateRepo || !newRepoName || !studentGithubUsername) {
       return res.status(400).json({
-        error: 'Missing required fields: templateOwner, templateRepo, newRepoName, studentGithubUsername',
+        success: false,
+        message: 'Template repo, new repo name, and student GitHub username are required'
       });
     }
-
-    // Get installation ID (org installation)
-    const installationId = process.env.GITHUB_INSTALLATION_ID;
-    if (!installationId) {
-      return res.status(500).json({
-        error: 'GitHub App not installed on organization',
-      });
-    }
-
-    // Generate installation token
-    const installationToken = await generateInstallationToken(installationId);
 
     // Create repository from template
-    const newRepo = await createRepoFromTemplate(
-      installationToken,
+    const result = await getGitHubService().createRepositoryFromTemplate({
       templateOwner,
       templateRepo,
       newRepoName,
-      true // private repo
-    );
+      studentGithubUsername,
+      isPrivate
+    });
 
-    // Add student as collaborator
-    const orgName = process.env.GITHUB_ORG || 'aid-x-club';
-    await addCollaborator(installationToken, orgName, newRepoName, studentGithubUsername, 'push');
-
-    res.status(201).json({
+    res.json({
       success: true,
-      repository: {
-        name: newRepo.name,
-        url: newRepo.url,
-        fullName: newRepo.fullName,
-        collaborator: studentGithubUsername,
-      },
-      message: 'Project repository created successfully',
+      message: 'Repository created successfully',
+      data: result
     });
   } catch (error) {
     console.error('Error creating project repository:', error);
-    res.status(500).json({ error: error.message || 'Failed to create project repository' });
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Failed to create repository'
+    });
   }
 };
 
 /**
- * Webhook endpoint for GitHub App events
- * Verifies signature and processes events
+ * Handle GitHub webhooks
+ * POST /api/github/webhook
  */
-export const handleWebhook = async (req, res) => {
+export const handleGitHubWebhook = async (req, res) => {
   try {
     const signature = req.headers['x-hub-signature-256'];
-    const eventType = req.headers['x-github-event'];
+    const event = req.headers['x-github-event'];
     const payload = JSON.stringify(req.body);
 
     // Verify webhook signature
-    if (!verifyWebhookSignature(payload, signature)) {
-      console.warn('Invalid webhook signature received');
-      return res.status(401).json({ error: 'Invalid signature' });
+    if (signature) {
+      const isValid = getGitHubService().verifyWebhookSignature(payload, signature);
+      if (!isValid) {
+        console.error('Invalid webhook signature');
+        return res.status(401).json({
+          success: false,
+          message: 'Invalid signature'
+        });
+      }
     }
 
-    // Log supported event types
-    const supportedEvents = ['installation', 'installation_repositories', 'repository'];
-    if (!supportedEvents.includes(eventType)) {
-      console.log(`Received unsupported event type: ${eventType}`);
-      return res.status(200).json({ message: 'Event received but not processed' });
-    }
+    console.log(`📥 Received GitHub webhook: ${event}`);
 
-    // Process based on event type
-    switch (eventType) {
+    // Handle different event types
+    switch (event) {
       case 'installation':
-        console.log('Installation event:', req.body.action);
-        // Handle installation created/deleted
-        if (req.body.action === 'created') {
-          console.log(`GitHub App installed on: ${req.body.installation.account.login}`);
-        } else if (req.body.action === 'deleted') {
-          console.log(`GitHub App uninstalled from: ${req.body.installation.account.login}`);
-        }
+        console.log('Installation event:', {
+          action: req.body.action,
+          installation_id: req.body.installation?.id
+        });
         break;
 
       case 'installation_repositories':
-        console.log('Installation repositories event:', req.body.action);
-        // Handle repository added/removed to installation
-        if (req.body.action === 'added') {
-          console.log(`Repositories added to installation:`, req.body.repositories_added);
-        } else if (req.body.action === 'removed') {
-          console.log(`Repositories removed from installation:`, req.body.repositories_removed);
-        }
+        console.log('Installation repositories event:', {
+          action: req.body.action,
+          repositories_added: req.body.repositories_added?.length || 0,
+          repositories_removed: req.body.repositories_removed?.length || 0
+        });
         break;
 
       case 'repository':
-        console.log('Repository event:', req.body.action);
-        // Handle repository events (created, deleted, etc.)
-        console.log(`Repository ${req.body.action}: ${req.body.repository.full_name}`);
+        console.log('Repository event:', {
+          action: req.body.action,
+          repository: req.body.repository?.full_name
+        });
+        break;
+
+      case 'push':
+        console.log('Push event:', {
+          repository: req.body.repository?.full_name,
+          ref: req.body.ref,
+          commits: req.body.commits?.length || 0
+        });
+        break;
+
+      case 'pull_request':
+        console.log('Pull request event:', {
+          action: req.body.action,
+          repository: req.body.repository?.full_name,
+          pr_number: req.body.pull_request?.number
+        });
         break;
 
       default:
-        console.log(`Unhandled event type: ${eventType}`);
+        console.log(`Unhandled event type: ${event}`);
     }
 
-    res.status(200).json({ message: 'Webhook processed successfully' });
+    // Acknowledge receipt
+    res.status(200).json({
+      success: true,
+      message: 'Webhook received'
+    });
   } catch (error) {
-    console.error('Error processing webhook:', error);
-    res.status(500).json({ error: 'Failed to process webhook' });
+    console.error('Error handling webhook:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to process webhook'
+    });
   }
 };
 
 /**
- * Get GitHub login URL (for frontend)
- * Can be used as an alternative to redirecting directly
+ * Get GitHub connection status
+ * GET /api/github/status
  */
-export const getGitHubLoginUrl = (req, res) => {
+export const getGitHubStatus = async (req, res) => {
   try {
-    const clientId = process.env.GITHUB_CLIENT_ID;
-    const redirectUri = process.env.GITHUB_CALLBACK_URL;
+    console.log('🔍 Checking GitHub status...');
+    console.log('  - req.user:', JSON.stringify(req.user));
 
-    if (!clientId || !redirectUri) {
-      return res.status(500).json({ error: 'GitHub OAuth not configured' });
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Not authenticated'
+      });
     }
 
-    const scope = 'user:email read:user';
-    const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`;
+    // Handle different JWT payload structures
+    const userId = req.user.id || req.user.userId || req.user._id;
+    console.log('  - Extracted user ID:', userId);
 
-    res.json({ loginUrl: authUrl });
+    const user = await User.findById(userId);
+
+    if (!user) {
+      console.warn('⚠️  User not found with ID:', userId);
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    console.log('✅ GitHub status:', {
+      connected: user.githubConnected,
+      username: user.githubUsername
+    });
+
+    res.json({
+      success: true,
+      githubConnected: user.githubConnected || false,
+      githubUsername: user.githubUsername || null,
+      githubId: user.githubId || null
+    });
   } catch (error) {
-    console.error('Error getting GitHub login URL:', error);
-    res.status(500).json({ error: 'Failed to get login URL' });
+    console.error('❌ Error getting GitHub status:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to get GitHub status'
+    });
+  }
+};
+
+/**
+ * Disconnect GitHub account
+ * POST /api/github/disconnect
+ */
+export const disconnectGitHub = async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Not authenticated'
+      });
+    }
+
+    // Handle different JWT payload structures
+    const userId = req.user.id || req.user.userId || req.user._id;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    user.githubUsername = null;
+    user.githubId = null;
+    user.githubConnected = false;
+    user.githubAvatarUrl = null;
+    await user.save();
+
+    res.json({
+      success: true,
+      message: 'GitHub account disconnected successfully'
+    });
+  } catch (error) {
+    console.error('Error disconnecting GitHub:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to disconnect GitHub account'
+    });
   }
 };

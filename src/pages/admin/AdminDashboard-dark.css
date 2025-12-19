@@ -1,0 +1,507 @@
+﻿/* ============================================
+   DARK MODE STYLES - TRUE BLACK THEME
+   ============================================ */
+
+/* Dark Mode Variables - Pure Black Theme */
+body.dark-mode {
+  --bg-primary: #000000;
+  --bg-secondary: #0a0a0a;
+  --bg-tertiary: #1a1a1a;
+  --bg-card: #121212;
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0b0;
+  --text-muted: #707070;
+  --border-color: #2a2a2a;
+  --shadow: rgba(0, 0, 0, 0.8);
+  --accent-blue: #3b82f6;
+  --accent-green: #10b981;
+  --accent-purple: #8b5cf6;
+  --accent-orange: #f59e0b;
+  --accent-red: #ef4444;
+}
+
+/* Dark Mode - Body and Main Container */
+body.dark-mode {
+  background: #000000 !important;
+  color: #ffffff !important;
+}
+
+body.dark-mode .admin-dashboard-container {
+  background: #000000 !important;
+  color: #ffffff !important;
+}
+
+body.dark-mode .dashboard-main {
+  background: #000000 !important;
+}
+
+/* Dark Mode - Sidebar */
+body.dark-mode .dashboard-sidebar {
+  background: #0a0a0a !important;
+  border-right: 1px solid #2a2a2a !important;
+}
+
+body.dark-mode .sidebar-header {
+  background: #0a0a0a !important;
+  border-bottom: 1px solid #2a2a2a !important;
+}
+
+body.dark-mode .logo-text {
+  color: #ffffff !important;
+}
+
+body.dark-mode .nav-item {
+  color: #b0b0b0 !important;
+}
+
+body.dark-mode .nav-item:hover {
+  background: #1a1a1a !important;
+  color: #ffffff !important;
+}
+
+body.dark-mode .nav-item.active {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+}
+
+body.dark-mode .nav-section-header {
+  color: #707070 !important;
+}
+
+body.dark-mode .sidebar-footer {
+  background: #0a0a0a !important;
+  border-top: 1px solid #2a2a2a !important;
+}
+
+body.dark-mode .logout-btn {
+  color: #b0b0b0 !important;
+}
+
+body.dark-mode .logout-btn:hover {
+  background: rgba(239, 68, 68, 0.1) !important;
+  color: #ef4444 !important;
+}
+
+/* Dark Mode - Header */
+body.dark-mode .dashboard-header {
+  background: #0a0a0a !important;
+  border-bottom: 1px solid #2a2a2a !important;
+}
+
+body.dark-mode .page-title {
+  color: #ffffff !important;
+}
+
+body.dark-mode .page-subtitle {
+  color: #b0b0b0 !important;
+}
+
+body.dark-mode .search-container {
+  background: #1a1a1a !important;
+  border: 1px solid #2a2a2a !important;
+}
+
+body.dark-mode .search-input {
+  background: transparent !important;
+  color: #ffffff !important;
+}
+
+body.dark-mode .search-input::placeholder {
+  color: #707070 !important;
+}
+
+body.dark-mode .search-icon {
+  color: #707070 !important;
+}
+
+body.dark-mode .icon-btn {
+  color: #b0b0b0 !important;
+  background: #1a1a1a !important;
+  border: 1px solid #2a2a2a !important;
+}
+
+body.dark-mode .icon-btn:hover {
+  background: #2a2a2a !important;
+  color: #ffffff !important;
+}
+
+body.dark-mode .theme-toggle {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b) !important;
+  color: #000000 !important;
+}
+
+body.dark-mode .notification-badge {
+  background: #ef4444 !important;
+  color: #ffffff !important;
+}
+
+body.dark-mode .user-menu-trigger {
+  background: #1a1a1a !important;
+  color: #ffffff !important;
+  border: 1px solid #2a2a2a !important;
+}
+
+body.dark-mode .user-menu-dropdown {
+  background: #121212 !important;
+  border: 1px solid #2a2a2a !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8) !important;
+}
+
+body.dark-mode .user-menu-item {
+  color: #b0b0b0 !important;
+}
+
+body.dark-mode .user-menu-item:hover {
+  background: #1a1a1a !important;
+  color: #ffffff !important;
+}
+
+/* Dark Mode - Stats Cards */
+body.dark-mode .stats-grid {
+  background: transparent !important;
+}
+
+body.dark-mode .stat-card {
+  background: #121212 !important;
+  border: 1px solid #2a2a2a !important;
+}
+
+body.dark-mode .stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8) !important;
+  border-color: #3b82f6 !important;
+}
+
+body.dark-mode .stat-value {
+  color: #ffffff !important;
+}
+
+body.dark-mode .stat-label {
+  color: #b0b0b0 !important;
+}
+
+body.dark-mode .stat-icon-wrapper {
+  background: #1a1a1a !important;
+}
+
+/* Dark Mode - All Cards */
+body.dark-mode .dashboard-card,
+body.dark-mode .settings-card,
+body.dark-mode .event-card,
+body.dark-mode .project-card,
+body.dark-mode .resource-card,
+body.dark-mode .certificate-card,
+body.dark-mode .badge-card,
+body.dark-mode .chart-card,
+body.dark-mode .activity-card {
+  background: #121212 !important;
+  border: 1px solid #2a2a2a !important;
+  color: #ffffff !important;
+}
+
+body.dark-mode .card-header {
+  background: #0a0a0a !important;
+  border-bottom: 1px solid #2a2a2a !important;
+}
+
+body.dark-mode .card-title,
+body.dark-mode .section-title,
+body.dark-mode .tab-title {
+  color: #ffffff !important;
+}
+
+body.dark-mode .card-subtitle {
+  color: #b0b0b0 !important;
+}
+
+/* Dark Mode - Tables */
+body.dark-mode .users-table,
+body.dark-mode .events-table,
+body.dark-mode .projects-table,
+body.dark-mode table {
+  background: #121212 !important;
+  border: 1px solid #2a2a2a !important;
+}
+
+body.dark-mode .users-table th,
+body.dark-mode .events-table th,
+body.dark-mode .projects-table th,
+body.dark-mode table th {
+  background: #0a0a0a !important;
+  color: #ffffff !important;
+  border-bottom: 1px solid #2a2a2a !important;
+}
+
+body.dark-mode .users-table td,
+body.dark-mode .events-table td,
+body.dark-mode .projects-table td,
+body.dark-mode table td {
+  border-bottom: 1px solid #2a2a2a !important;
+  color: #b0b0b0 !important;
+}
+
+body.dark-mode .users-table tr:hover,
+body.dark-mode .events-table tr:hover,
+body.dark-mode .projects-table tr:hover,
+body.dark-mode table tr:hover {
+  background: #1a1a1a !important;
+}
+
+/* Dark Mode - Buttons */
+body.dark-mode .btn-primary {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+body.dark-mode .btn-primary:hover {
+  background: linear-gradient(135deg, #2563eb, #7c3aed) !important;
+}
+
+body.dark-mode .btn-secondary {
+  background: #1a1a1a !important;
+  color: #ffffff !important;
+  border: 1px solid #2a2a2a !important;
+}
+
+body.dark-mode .btn-secondary:hover {
+  background: #2a2a2a !important;
+}
+
+body.dark-mode .tab-btn {
+  background: #1a1a1a !important;
+  color: #b0b0b0 !important;
+  border: 1px solid #2a2a2a !important;
+}
+
+body.dark-mode .tab-btn.active {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+body.dark-mode .category-btn {
+  background: #1a1a1a !important;
+  color: #b0b0b0 !important;
+  border: 1px solid #2a2a2a !important;
+}
+
+body.dark-mode .category-btn.active {
+  background: #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+/* Dark Mode - Forms */
+body.dark-mode .form-group label {
+  color: #ffffff !important;
+}
+
+body.dark-mode .form-group input,
+body.dark-mode .form-group textarea,
+body.dark-mode .form-group select {
+  background: #1a1a1a !important;
+  border: 1px solid #2a2a2a !important;
+  color: #ffffff !important;
+}
+
+body.dark-mode .form-group input:focus,
+body.dark-mode .form-group textarea:focus,
+body.dark-mode .form-group select:focus {
+  border-color: #3b82f6 !important;
+  background: #121212 !important;
+  outline: none !important;
+}
+
+body.dark-mode .form-group input::placeholder,
+body.dark-mode .form-group textarea::placeholder {
+  color: #707070 !important;
+}
+
+body.dark-mode .form-group input:disabled {
+  background: #0a0a0a !important;
+  color: #707070 !important;
+}
+
+/* Dark Mode - Activity Feed */
+body.dark-mode .activity-list {
+  background: transparent !important;
+}
+
+body.dark-mode .activity-item {
+  background: #121212 !important;
+  border: 1px solid #2a2a2a !important;
+}
+
+body.dark-mode .activity-text {
+  color: #ffffff !important;
+}
+
+body.dark-mode .activity-time {
+  color: #707070 !important;
+}
+
+body.dark-mode .activity-icon {
+  background: #1a1a1a !important;
+}
+
+/* Dark Mode - Badges and Status */
+body.dark-mode .status-badge {
+  background: #1a1a1a !important;
+  color: #b0b0b0 !important;
+  border: 1px solid #2a2a2a !important;
+}
+
+body.dark-mode .status-badge.pending {
+  background: rgba(251, 191, 36, 0.15) !important;
+  color: #fbbf24 !important;
+  border-color: #fbbf24 !important;
+}
+
+body.dark-mode .status-badge.approved,
+body.dark-mode .status-badge.completed {
+  background: rgba(16, 185, 129, 0.15) !important;
+  color: #10b981 !important;
+  border-color: #10b981 !important;
+}
+
+body.dark-mode .status-badge.rejected {
+  background: rgba(239, 68, 68, 0.15) !important;
+  color: #ef4444 !important;
+  border-color: #ef4444 !important;
+}
+
+body.dark-mode .difficulty-badge {
+  background: #1a1a1a !important;
+  color: #b0b0b0 !important;
+  border: 1px solid #2a2a2a !important;
+}
+
+body.dark-mode .unlocked-badge {
+  background: rgba(16, 185, 129, 0.15) !important;
+  color: #10b981 !important;
+}
+
+/* Dark Mode - Empty States */
+body.dark-mode .empty-state {
+  color: #b0b0b0 !important;
+}
+
+body.dark-mode .empty-state h3 {
+  color: #ffffff !important;
+}
+
+body.dark-mode .empty-icon {
+  color: #707070 !important;
+}
+
+body.dark-mode .text-muted {
+  color: #707070 !important;
+}
+
+body.dark-mode .event-card-empty,
+body.dark-mode .project-card-empty,
+body.dark-mode .certificate-card-empty {
+  background: #121212 !important;
+  border: 1px solid #2a2a2a !important;
+  color: #b0b0b0 !important;
+}
+
+/* Dark Mode - Profile View */
+body.dark-mode .profile-view-item {
+  background: #1a1a1a !important;
+  border: 1px solid #2a2a2a !important;
+}
+
+body.dark-mode .profile-view-label {
+  color: #707070 !important;
+}
+
+body.dark-mode .profile-view-value {
+  color: #ffffff !important;
+}
+
+/* Dark Mode - Alerts */
+body.dark-mode .alert-success {
+  background: rgba(16, 185, 129, 0.1) !important;
+  border: 1px solid #10b981 !important;
+  color: #10b981 !important;
+}
+
+body.dark-mode .alert-error {
+  background: rgba(239, 68, 68, 0.1) !important;
+  border: 1px solid #ef4444 !important;
+  color: #ef4444 !important;
+}
+
+/* Dark Mode - Grids */
+body.dark-mode .events-grid,
+body.dark-mode .projects-grid,
+body.dark-mode .resources-grid,
+body.dark-mode .certificates-grid,
+body.dark-mode .badges-grid {
+  background: transparent !important;
+}
+
+/* Dark Mode - Sections */
+body.dark-mode .events-section,
+body.dark-mode .projects-section,
+body.dark-mode .achievements-section,
+body.dark-mode .resources-section,
+body.dark-mode .certificates-section {
+  background: transparent !important;
+}
+
+/* Dark Mode - Headers */
+body.dark-mode .projects-header,
+body.dark-mode .events-tabs,
+body.dark-mode .resources-categories {
+  background: transparent !important;
+}
+
+/* Dark Mode - Loading States */
+body.dark-mode .loading-spinner {
+  border-color: #2a2a2a !important;
+  border-top-color: #3b82f6 !important;
+}
+
+body.dark-mode .loading-state {
+  background: #000000 !important;
+  color: #ffffff !important;
+}
+
+/* Dark Mode - Scrollbars */
+body.dark-mode ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+body.dark-mode ::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb {
+  background: #2a2a2a;
+  border-radius: 5px;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb:hover {
+  background: #3a3a3a;
+}
+
+/* Ensure all text is visible */
+body.dark-mode p,
+body.dark-mode span,
+body.dark-mode div,
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode h5,
+body.dark-mode h6 {
+  color: inherit;
+}
+
+/* Override any remaining light backgrounds */
+body.dark-mode * {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease !important;
+}

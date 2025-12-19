@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import axios from 'axios';
 import Lottie from 'lottie-react';
 import codingAnimation from '../../assets/Coding.json';
@@ -7,6 +8,7 @@ import './Login.css';
 
 export default function Login() {
   const navigate = useNavigate();
+  const { setAuthState } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -51,9 +53,10 @@ export default function Login() {
           headers: {
             'Content-Type': 'application/json',
           },
-          withCredentials: true
         }
       );
+
+      console.log('📥 Login response:', response.data);
 
       // Validate response
       if (!response.data || !response.data.token || !response.data.user) {
@@ -65,8 +68,8 @@ export default function Login() {
       console.log('✅ Login response received:', { hasToken: !!token, user });
       console.log('👤 User role:', user?.role);
 
-      localStorage.setItem('authToken', token);
-      localStorage.setItem('user', JSON.stringify(user));
+      // Use AuthContext setAuthState to update app state (without making another API call)
+      setAuthState(token, user);
 
       // Store remember me preference
       if (formData.rememberMe) {
@@ -87,7 +90,7 @@ export default function Login() {
         if (redirectPath) {
           localStorage.removeItem('redirectPath');
           console.log('🔄 Redirecting to saved path:', redirectPath);
-          navigate(redirectPath);
+          navigate(redirectPath, { replace: true });
         } else if (user.role === 'admin' || user.role === 'coordinator') {
           console.log('🔄 Redirecting to admin dashboard');
           navigate('/admin/dashboard', { replace: true });

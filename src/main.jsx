@@ -6,7 +6,6 @@ import "./index.css";
 // import "./utils/error-handler";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { NotFound } from "./components/ui/ghost-404-page";
-import { SmoothCursor } from "./components/ui/smooth-cursor";
 import {
   Navbar,
   Hero,
@@ -25,6 +24,7 @@ import CreateEvent from "./pages/events/CreateEvent";
 import StudentDashboard from "./pages/student/StudentDashboard";
 import GitHubCallback from "./pages/github/GitHubCallback";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import UserManagement from "./pages/admin/UserManagement";
 
 import ReactGA from "react-ga";
 ReactGA.initialize("K6F7N5MR4K");
@@ -54,9 +54,26 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             }
           />
           <Route
+            path="/events/:id"
+            element={
+              <div className="events-bg">
+                <Navbar />
+                <EventDetail />
+              </div>
+            }
+          />
+          <Route
+            path="/events/create"
+            element={
+              <ProtectedRoute>
+                <CreateEvent />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/guidelines"
             element={
-              <div className="guidelines-bg">
+              <div className="bg">
                 <Navbar />
                 <Guildelines />
               </div>
@@ -65,7 +82,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route
             path="/about"
             element={
-              <div>
+              <div className="bg">
                 <Navbar />
                 <About />
               </div>
@@ -117,6 +134,14 @@ ReactDOM.createRoot(document.getElementById("root")).render(
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/projects/create"
+            element={
+              <ProtectedRoute>
+                <CreateProject />
+              </ProtectedRoute>
+            }
+          />
           {/* Student Dashboard Routes */}
           <Route
             path="/student/dashboard"
@@ -145,6 +170,14 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             }
           />
           <Route
+            path="/admin/users"
+            element={
+              <ProtectedRoute>
+                <UserManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="*"
             element={
               <NotFound />
@@ -153,6 +186,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         </Routes>
       </AuthProvider>
     </BrowserRouter>
-    <SmoothCursor />
   </React.StrictMode>
 );

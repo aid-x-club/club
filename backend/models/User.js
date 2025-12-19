@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Email is required'],
     unique: true,
     lowercase: true,
-    match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Please provide a valid email']
+    match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please provide a valid email']
   },
   studentId: {
     type: String,
@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
     select: false // Don't return password by default
   },
 
-  // Profile
+  // Extended Profile
   year: {
     type: String,
     enum: ['1st', '2nd', '3rd', '4th'],
@@ -40,6 +40,10 @@ const userSchema = new mongoose.Schema({
     default: null
   },
   bio: String,
+  rollNumber: String,
+  skills: [String],
+  interests: [String],
+  linkedinProfile: String,
 
   // Authentication
   role: {
@@ -76,6 +80,22 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  points: {
+    type: Number,
+    default: 0
+  },
+
+  // Settings
+  notificationSettings: {
+    emailNotifications: { type: Boolean, default: true },
+    eventReminders: { type: Boolean, default: true },
+    announcementAlerts: { type: Boolean, default: true }
+  },
+  privacySettings: {
+    profileVisibility: { type: String, enum: ['public', 'members', 'private'], default: 'members' },
+    showEmail: { type: Boolean, default: false },
+    showProjects: { type: Boolean, default: true }
+  },
 
   // Timestamps
   createdAt: {
@@ -95,9 +115,9 @@ userSchema.index({ email: 1 }, { unique: true });
 userSchema.index({ role: 1 });
 
 // Hash password before saving
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
-  
+
   try {
     const salt = await bcryptjs.genSalt(10);
     this.password = await bcryptjs.hash(this.password, salt);
@@ -109,12 +129,12 @@ userSchema.pre('save', async function(next) {
 });
 
 // Method to compare passwords
-userSchema.methods.comparePassword = async function(passwordToCheck) {
+userSchema.methods.comparePassword = async function (passwordToCheck) {
   return await bcryptjs.compare(passwordToCheck, this.password);
 };
 
 // Method to get public profile
-userSchema.methods.getPublicProfile = function() {
+userSchema.methods.getPublicProfile = function () {
   const user = this.toObject();
   delete user.password;
   delete user.githubAccessToken;

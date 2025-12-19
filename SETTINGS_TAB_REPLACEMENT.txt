@@ -1,0 +1,148 @@
+// Settings Tab JSX - Replace lines 624-890 in AdminDashboard.jsx
+
+{activeTab === 'settings' && (
+  <div className="settings-tab">
+    <div className="tab-header">
+      <h2 className="tab-title">Settings</h2>
+    </div>
+
+    {/* Profile Settings */}
+    <div className="settings-card">
+      <div className="settings-card-header">
+        <div>
+          <h3 className="settings-title">
+            <Users size={20} />
+            Profile Settings
+          </h3>
+          <p className="settings-description">Manage your account information</p>
+        </div>
+        {!isEditMode && (
+          <button className="btn-primary" onClick={handleEditProfile}>
+            <Edit size={18} />
+            Edit Profile
+          </button>
+        )}
+      </div>
+
+      <div className="settings-card-body">
+        {profileSuccess && (
+          <div className="um-alert um-alert-success" style={{marginBottom: '1rem'}}>
+            <CheckCircle2 size={20} />
+            <span>{profileSuccess}</span>
+          </div>
+        )}
+        {profileError && (
+          <div className="um-alert um-alert-error" style={{marginBottom: '1rem'}}>
+            <XCircle size={20} />
+            <span>{profileError}</span>
+          </div>
+        )}
+
+        {!isEditMode ? (
+          // VIEW MODE
+          <div className="profile-view">
+            <div className="profile-view-row">
+              <div className="profile-view-item">
+                <label>Full Name</label>
+                <p>{user?.name || 'Not set'}</p>
+              </div>
+              <div className="profile-view-item">
+                <label>Email Address</label>
+                <p>{user?.email || 'Not set'}</p>
+              </div>
+            </div>
+
+            <div className="profile-view-row">
+              <div className="profile-view-item">
+                <label>Role</label>
+                <p className="role-badge">{user?.role || 'N/A'}</p>
+              </div>
+              <div className="profile-view-item">
+                <label>Roll Number</label>
+                <p>{user?.rollNumber || 'Not set'}</p>
+              </div>
+            </div>
+
+            <div className="profile-view-item">
+              <label>Bio</label>
+              <p>{user?.bio || 'No bio added yet'}</p>
+            </div>
+          </div>
+        ) : (
+          // EDIT MODE
+          <div className="settings-form">
+            <div className="form-row">
+              <div className="form-group">
+                <label>Full Name</label>
+                <input
+                  type="text"
+                  value={profileData.name}
+                  onChange={(e) => setProfileData({...profileData, name: e.target.value})}
+                  placeholder="Enter your full name"
+                />
+              </div>
+              <div className="form-group">
+                <label>Email Address</label>
+                <input
+                  type="email"
+                  value={profileData.email}
+                  onChange={(e) => setProfileData({...profileData, email: e.target.value})}
+                  placeholder="Enter your email"
+                />
+              </div>
+            </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label>Role</label>
+                <input
+                  type="text"
+                  value={user?.role || 'N/A'}
+                  disabled
+                  className="input-disabled"
+                />
+              </div>
+              <div className="form-group">
+                <label>Roll Number</label>
+                <input
+                  type="text"
+                  value={profileData.rollNumber}
+                  onChange={(e) => setProfileData({...profileData, rollNumber: e.target.value})}
+                  placeholder="Enter roll number"
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>Bio</label>
+              <textarea
+                rows="3"
+                value={profileData.bio}
+                onChange={(e) => setProfileData({...profileData, bio: e.target.value})}
+                placeholder="Tell us about yourself..."
+              ></textarea>
+            </div>
+
+            <div className="form-actions">
+              <button 
+                className="btn-secondary" 
+                onClick={handleCancelProfile}
+                disabled={profileSaving}
+              >
+                Cancel
+              </button>
+              <button 
+                className="btn-primary"
+                onClick={handleSaveProfile}
+                disabled={profileSaving}
+              >
+                <CheckCircle2 size={18} />
+                {profileSaving ? 'Saving...' : 'Save Changes'}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+)}

@@ -197,3 +197,10 @@ firebase-debug.*.log
 
 # Tailwind
 .tailwind-cache
+
+# AI Agent files
+.agent/
+
+# AI-generated documentation (exclude main README)
+*.md
+!README.md

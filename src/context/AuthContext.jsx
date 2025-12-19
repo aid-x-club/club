@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }) => {
       );
 
       const { token: newToken, user: userData } = response.data;
-      
+
       // Store in localStorage
       localStorage.setItem('authToken', newToken);
       localStorage.setItem('user', JSON.stringify(userData));
@@ -101,6 +101,21 @@ export const AuthProvider = ({ children }) => {
       const message = error.response?.data?.message || 'Signup failed';
       throw new Error(message);
     }
+  };
+
+  // Set auth state without making API call (for when login is done in component)
+  const setAuthState = (newToken, userData) => {
+    // Store in localStorage
+    localStorage.setItem('authToken', newToken);
+    localStorage.setItem('user', JSON.stringify(userData));
+
+    // Update context
+    setToken(newToken);
+    setUser(userData);
+    setIsAuthenticated(true);
+
+    // Set axios default header
+    axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
   };
 
   const logout = () => {
@@ -196,6 +211,7 @@ export const AuthProvider = ({ children }) => {
     login,
     signup,
     logout,
+    setAuthState,
     refreshToken,
     forgotPassword,
     updateProfile,
