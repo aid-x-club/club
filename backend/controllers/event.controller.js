@@ -1,5 +1,8 @@
-import Event from '../models/Event.js';
-import User from '../models/User.js';
+// TODO: Replace Mongoose models with Supabase queries
+import { supabase } from '../config/supabase.js';
+
+// import Event from '../models/Event.js';
+// import User from '../models/User.js';
 
 // @desc    Create a new event
 // @route   POST /api/events

@@ -1,4 +1,7 @@
-import User from '../models/User.js';
+// TODO: Replace Mongoose models with Supabase queries
+import { supabase } from '../config/supabase.js';
+
+// import User from '../models/User.js';
 
 /**
  * @route   GET /api/users/me

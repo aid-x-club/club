@@ -1,4 +1,6 @@
-import User from '../models/User.js';
+// TODO: Replace Mongoose models with Supabase queries
+// import User from '../models/User.js';
+import { supabase } from '../config/supabase.js';
 import { sendTokenResponse, generateToken, isValidStudentId } from '../utils/auth.utils.js';
 import { isValidStudent, validateStudent } from '../utils/studentDataValidator.js';
 import { validationResult } from 'express-validator';
@@ -14,30 +16,30 @@ export const verifyStudentId = async (req, res, next) => {
 
     // Validate format
     if (!isValidStudentId(studentId)) {
-      return res.status(400).json({ 
-        error: 'Invalid Student ID format' 
+      return res.status(400).json({
+        error: 'Invalid Student ID format'
       });
     }
 
     // Check if student ID is valid in CSV data
     if (!isValidStudent(studentId)) {
-      return res.status(400).json({ 
-        error: 'Student ID not found in system. Please contact administrator.' 
+      return res.status(400).json({
+        error: 'Student ID not found in system. Please contact administrator.'
       });
     }
 
     // Check if student ID is already registered
     const existingUser = await User.findOne({ studentId: studentId.toUpperCase() });
-    
+
     if (existingUser) {
-      return res.status(400).json({ 
-        error: 'An account is already registered with this Student ID.' 
+      return res.status(400).json({
+        error: 'An account is already registered with this Student ID.'
       });
     }
 
     // If all checks pass, return success with student data
     const studentData = validateStudent(studentId);
-    res.status(200).json({ 
+    res.status(200).json({
       success: true,
       message: 'Student ID verified successfully',
       studentId: studentId.toUpperCase(),
@@ -62,9 +64,9 @@ export const signup = async (req, res, next) => {
     // Validate request
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         success: false,
-        errors: errors.array() 
+        errors: errors.array()
       });
     }
 
@@ -72,23 +74,23 @@ export const signup = async (req, res, next) => {
 
     // Verify student ID format
     if (!isValidStudentId(studentId)) {
-      return res.status(400).json({ 
-        error: 'Invalid Student ID format' 
+      return res.status(400).json({
+        error: 'Invalid Student ID format'
       });
     }
 
     // Verify student ID exists in CSV data
     if (!isValidStudent(studentId)) {
-      return res.status(400).json({ 
-        error: 'Student ID not found in system. Please contact administrator.' 
+      return res.status(400).json({
+        error: 'Student ID not found in system. Please contact administrator.'
       });
     }
 
     // Check if student ID is already registered
     const existingUser = await User.findOne({ studentId: studentId.toUpperCase() });
     if (existingUser) {
-      return res.status(400).json({ 
-        error: 'An account is already registered with this Student ID.' 
+      return res.status(400).json({
+        error: 'An account is already registered with this Student ID.'
       });
     }
 
@@ -126,9 +128,9 @@ export const login = async (req, res, next) => {
     // Validate request
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         success: false,
-        errors: errors.array() 
+        errors: errors.array()
       });
     }
 
@@ -136,8 +138,8 @@ export const login = async (req, res, next) => {
 
     // Validate email & password
     if (!email || !password) {
-      return res.status(400).json({ 
-        error: 'Please provide email and password' 
+      return res.status(400).json({
+        error: 'Please provide email and password'
       });
     }
 
@@ -146,18 +148,18 @@ export const login = async (req, res, next) => {
 
     if (!user) {
       console.log(`❌ Login attempt failed: User not found for email: ${email}`);
-      return res.status(401).json({ 
-        error: 'Invalid credentials' 
+      return res.status(401).json({
+        error: 'Invalid credentials'
       });
     }
 
     // Check if password matches
     const isPasswordCorrect = await user.comparePassword(password);
-    
+
     if (!isPasswordCorrect) {
       console.log(`❌ Login attempt failed: Invalid password for user: ${email}`);
-      return res.status(401).json({ 
-        error: 'Invalid credentials' 
+      return res.status(401).json({
+        error: 'Invalid credentials'
       });
     }
 
@@ -181,10 +183,10 @@ export const login = async (req, res, next) => {
  * @access  Private
  */
 export const logout = (req, res) => {
-  res.status(200).json({ 
+  res.status(200).json({
     success: true,
     message: 'Logged out successfully',
-    token: null 
+    token: null
   });
 };
 
@@ -196,15 +198,15 @@ export const logout = (req, res) => {
 export const refreshToken = (req, res) => {
   try {
     const newToken = generateToken(req.user.userId, req.user.role);
-    
+
     res.status(200).json({
       success: true,
       message: 'Token refreshed successfully',
       token: newToken
     });
   } catch (error) {
-    res.status(401).json({ 
-      error: 'Could not refresh token' 
+    res.status(401).json({
+      error: 'Could not refresh token'
     });
   }
 };
@@ -221,8 +223,8 @@ export const forgotPassword = async (req, res, next) => {
     const user = await User.findOne({ email: email.toLowerCase() });
 
     if (!user) {
-      return res.status(404).json({ 
-        error: 'User not found' 
+      return res.status(404).json({
+        error: 'User not found'
       });
     }
 

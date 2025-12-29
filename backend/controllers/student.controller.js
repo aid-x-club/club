@@ -1,12 +1,15 @@
-import User from '../models/User.js';
-import Event from '../models/Event.js';
-import Project from '../models/Project.js';
-import EventRegistration from '../models/EventRegistration.js';
-import Achievement from '../models/Achievement.js';
-import UserAchievement from '../models/UserAchievement.js';
-import Resource from '../models/Resource.js';
-import Announcement from '../models/Announcement.js';
-import Notification from '../models/Notification.js';
+// TODO: Replace Mongoose models with Supabase queries
+import { supabase } from '../config/supabase.js';
+
+// import User from '../models/User.js';
+// import Event from '../models/Event.js';
+// import Project from '../models/Project.js';
+// import EventRegistration from '../models/EventRegistration.js';
+// import Achievement from '../models/Achievement.js';
+// import UserAchievement from '../models/UserAchievement.js';
+// import Resource from '../models/Resource.js';
+// import Announcement from '../models/Announcement.js';
+// import Notification from '../models/Notification.js';
 
 // Get Dashboard Stats
 export const getDashboardStats = async (req, res) => {

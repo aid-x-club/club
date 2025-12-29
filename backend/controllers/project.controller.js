@@ -1,5 +1,8 @@
-import Project from '../models/Project.js';
-import User from '../models/User.js';
+// TODO: Replace Mongoose models with Supabase queries
+import { supabase } from '../config/supabase.js';
+
+// import Project from '../models/Project.js';
+// import User from '../models/User.js';
 
 // @desc    Create a new project
 // @route   POST /api/projects

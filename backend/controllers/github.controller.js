@@ -1,5 +1,8 @@
+// TODO: Replace Mongoose models with Supabase queries
+import { supabase } from '../config/supabase.js';
+
 import GitHubService from '../services/github.service.js';
-import User from '../models/User.js';
+// import User from '../models/User.js';
 import crypto from 'crypto';
 
 // Create service instance lazily (after env vars are loaded)
