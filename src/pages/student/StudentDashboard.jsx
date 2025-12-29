@@ -32,12 +32,15 @@ import {
   Search,
   Edit,
   Save,
-  X
+  X,
+  Plus
 } from 'lucide-react';
 import { studentAPI } from '../../services/studentApi';
 import GitHubConnect from '../../components/github/GitHubConnect';
 import './StudentDashboard.css';
 import './StudentDashboard-dark.css';
+import './ProfilePremium.css';
+import './ProfilePremium-dark.css';
 
 export default function StudentDashboard() {
   const navigate = useNavigate();
@@ -73,6 +76,10 @@ export default function StudentDashboard() {
   const [profileSaving, setProfileSaving] = useState(false);
   const [profileSuccess, setProfileSuccess] = useState('');
   const [profileError, setProfileError] = useState('');
+  const [skillInput, setSkillInput] = useState('');
+  const [interestInput, setInterestInput] = useState('');
+  const [skillTags, setSkillTags] = useState([]);
+  const [interestTags, setInterestTags] = useState([]);
 
   // Dark Mode State
   const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -135,6 +142,8 @@ export default function StudentDashboard() {
         interests: user.interests?.join(', ') || '',
         linkedinProfile: user.linkedinProfile || ''
       });
+      setSkillTags(user.skills || []);
+      setInterestTags(user.interests || []);
     }
   }, [user]);
 
@@ -314,11 +323,11 @@ export default function StudentDashboard() {
       const token = localStorage.getItem('authToken');
       const userId = user?.id || user?.userId || user?._id;
 
-      // Process skills and interests
+      // Use tags instead of comma-separated strings
       const dataToSend = {
         ...profileData,
-        skills: profileData.skills ? profileData.skills.split(',').map(s => s.trim()).filter(s => s) : [],
-        interests: profileData.interests ? profileData.interests.split(',').map(i => i.trim()).filter(i => i) : []
+        skills: skillTags,
+        interests: interestTags
       };
 
       const response = await studentAPI.updateProfile(dataToSend);
@@ -351,9 +360,42 @@ export default function StudentDashboard() {
       interests: user?.interests?.join(', ') || '',
       linkedinProfile: user?.linkedinProfile || ''
     });
+    setSkillTags(user?.skills || []);
+    setInterestTags(user?.interests || []);
+    setSkillInput('');
+    setInterestInput('');
     setProfileError('');
     setProfileSuccess('');
     setIsEditMode(false);
+  };
+
+  // Tag management functions
+  const addSkillTag = (e) => {
+    if (e.key === 'Enter' && skillInput.trim()) {
+      e.preventDefault();
+      if (!skillTags.includes(skillInput.trim())) {
+        setSkillTags([...skillTags, skillInput.trim()]);
+      }
+      setSkillInput('');
+    }
+  };
+
+  const removeSkillTag = (tagToRemove) => {
+    setSkillTags(skillTags.filter(tag => tag !== tagToRemove));
+  };
+
+  const addInterestTag = (e) => {
+    if (e.key === 'Enter' && interestInput.trim()) {
+      e.preventDefault();
+      if (!interestTags.includes(interestInput.trim())) {
+        setInterestTags([...interestTags, interestInput.trim()]);
+      }
+      setInterestInput('');
+    }
+  };
+
+  const removeInterestTag = (tagToRemove) => {
+    setInterestTags(interestTags.filter(tag => tag !== tagToRemove));
   };
 
   const handleRegisterEvent = async (eventId) => {
@@ -697,7 +739,7 @@ export default function StudentDashboard() {
           )}
 
           {activeTab === 'profile' && (
-            <div className="profile-section">
+            <div className="profile-section-premium">
               {loading ? (
                 <div className="loading-state">Loading profile...</div>
               ) : !profile ? (
@@ -712,104 +754,210 @@ export default function StudentDashboard() {
                     console.log('GitHub connection changed:', connected, username);
                   }} />
 
-                  <div className="profile-card">
-                    <div className="profile-header">
-                      <div className="profile-avatar">
+                  {/* Profile Header Card */}
+                  <div className="profile-header-card">
+                    <div className="profile-cover-gradient"></div>
+                    <div className="profile-header-content">
+                      <div className="profile-avatar-large">
                         {profile.fullName?.charAt(0).toUpperCase() || 'S'}
                       </div>
-                      <div className="profile-info">
-                        <h3>{profile.fullName || 'Student'}</h3>
-                        <p>{profile.email}</p>
-                        <span className="profile-badge">Student Member</span>
+                      <div className="profile-header-info">
+                        <h2>{profile.fullName || 'Student'}</h2>
+                        <p className="profile-email">{profile.email}</p>
+                        <div className="profile-badges">
+                          <span className="profile-badge primary">
+                            <User size={14} />
+                            Student Member
+                          </span>
+                          {profile.rollNumber && (
+                            <span className="profile-badge secondary">
+                              ID: {profile.rollNumber}
+                            </span>
+                          )}
+                        </div>
                       </div>
                       {!isEditMode && (
-                        <button className="btn-primary" onClick={() => setIsEditMode(true)}>
+                        <button className="btn-edit-profile" onClick={() => setIsEditMode(true)}>
                           <Edit size={18} />
                           Edit Profile
                         </button>
                       )}
                     </div>
+                  </div>
 
-                    {profileSuccess && (
-                      <div className="alert alert-success">
-                        <CheckCircle2 size={18} />
-                        {profileSuccess}
-                      </div>
-                    )}
+                  {/* Alerts */}
+                  {profileSuccess && (
+                    <div className="alert alert-success">
+                      <CheckCircle2 size={18} />
+                      {profileSuccess}
+                    </div>
+                  )}
 
-                    {profileError && (
-                      <div className="alert alert-error">
-                        <X size={18} />
-                        {profileError}
-                      </div>
-                    )}
+                  {profileError && (
+                    <div className="alert alert-error">
+                      <X size={18} />
+                      {profileError}
+                    </div>
+                  )}
 
+                  {/* Profile Content */}
+                  <div className="profile-content-grid">
                     {isEditMode ? (
-                      <div className="profile-form">
-                        <div className="form-group">
-                          <label>Full Name</label>
-                          <input
-                            type="text"
-                            value={profileData.fullName}
-                            onChange={(e) => setProfileData({ ...profileData, fullName: e.target.value })}
-                            required
-                          />
+                      /* Edit Mode */
+                      <div className="profile-edit-container">
+                        <div className="profile-section-card">
+                          <h3 className="section-card-title">
+                            <User size={20} />
+                            Personal Information
+                          </h3>
+                          <div className="form-grid">
+                            <div className="form-group">
+                              <label>Full Name *</label>
+                              <input
+                                type="text"
+                                value={profileData.fullName}
+                                onChange={(e) => setProfileData({ ...profileData, fullName: e.target.value })}
+                                placeholder="Enter your full name"
+                                required
+                              />
+                            </div>
+                            <div className="form-group">
+                              <label>Email</label>
+                              <input type="email" value={profileData.email} disabled />
+                            </div>
+                            <div className="form-group">
+                              <label>Roll Number</label>
+                              <input
+                                type="text"
+                                value={profileData.rollNumber}
+                                onChange={(e) => setProfileData({ ...profileData, rollNumber: e.target.value })}
+                                placeholder="Enter your roll number"
+                              />
+                            </div>
+                            <div className="form-group">
+                              <label>Phone Number</label>
+                              <input
+                                type="tel"
+                                value={profileData.phone}
+                                onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
+                                placeholder="+1 (555) 000-0000"
+                              />
+                            </div>
+                          </div>
                         </div>
-                        <div className="form-group">
-                          <label>Email</label>
-                          <input type="email" value={profileData.email} disabled />
+
+                        <div className="profile-section-card">
+                          <h3 className="section-card-title">
+                            <FileText size={20} />
+                            About Me
+                          </h3>
+                          <div className="form-group">
+                            <label>Bio</label>
+                            <textarea
+                              value={profileData.bio}
+                              onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
+                              rows="5"
+                              placeholder="Tell us about yourself, your interests, and what you're passionate about..."
+                            ></textarea>
+                            <span className="char-count">{profileData.bio?.length || 0} / 500</span>
+                          </div>
                         </div>
-                        <div className="form-group">
-                          <label>Roll Number</label>
-                          <input
-                            type="text"
-                            value={profileData.rollNumber}
-                            onChange={(e) => setProfileData({ ...profileData, rollNumber: e.target.value })}
-                          />
+
+                        <div className="profile-section-card">
+                          <h3 className="section-card-title">
+                            <Zap size={20} />
+                            Skills & Expertise
+                          </h3>
+                          <div className="form-group">
+                            <label>Skills</label>
+                            <div className="tags-input-container">
+                              <div className="tags-display">
+                                {skillTags.map((tag, index) => (
+                                  <span key={index} className="tag skill-tag">
+                                    {tag}
+                                    <button
+                                      type="button"
+                                      onClick={() => removeSkillTag(tag)}
+                                      className="tag-remove"
+                                    >
+                                      <X size={14} />
+                                    </button>
+                                  </span>
+                                ))}
+                                <input
+                                  type="text"
+                                  value={skillInput}
+                                  onChange={(e) => setSkillInput(e.target.value)}
+                                  onKeyDown={addSkillTag}
+                                  placeholder={skillTags.length === 0 ? "Type a skill and press Enter..." : "Add more..."}
+                                  className="tag-input"
+                                />
+                              </div>
+                            </div>
+                            <p className="input-hint">
+                              <Plus size={14} />
+                              Press Enter to add a skill
+                            </p>
+                          </div>
                         </div>
-                        <div className="form-group">
-                          <label>Phone</label>
-                          <input
-                            type="tel"
-                            value={profileData.phone}
-                            onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
-                          />
+
+                        <div className="profile-section-card">
+                          <h3 className="section-card-title">
+                            <Rocket size={20} />
+                            Interests & Hobbies
+                          </h3>
+                          <div className="form-group">
+                            <label>Interests</label>
+                            <div className="tags-input-container">
+                              <div className="tags-display">
+                                {interestTags.map((tag, index) => (
+                                  <span key={index} className="tag interest-tag">
+                                    {tag}
+                                    <button
+                                      type="button"
+                                      onClick={() => removeInterestTag(tag)}
+                                      className="tag-remove"
+                                    >
+                                      <X size={14} />
+                                    </button>
+                                  </span>
+                                ))}
+                                <input
+                                  type="text"
+                                  value={interestInput}
+                                  onChange={(e) => setInterestInput(e.target.value)}
+                                  onKeyDown={addInterestTag}
+                                  placeholder={interestTags.length === 0 ? "Type an interest and press Enter..." : "Add more..."}
+                                  className="tag-input"
+                                />
+                              </div>
+                            </div>
+                            <p className="input-hint">
+                              <Plus size={14} />
+                              Press Enter to add an interest
+                            </p>
+                          </div>
                         </div>
-                        <div className="form-group">
-                          <label>Bio</label>
-                          <textarea
-                            value={profileData.bio}
-                            onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
-                            rows="4"
-                          ></textarea>
+
+                        <div className="profile-section-card">
+                          <h3 className="section-card-title">
+                            <ExternalLink size={20} />
+                            Social Links
+                          </h3>
+                          <div className="form-group">
+                            <label>LinkedIn Profile</label>
+                            <input
+                              type="url"
+                              value={profileData.linkedinProfile}
+                              onChange={(e) => setProfileData({ ...profileData, linkedinProfile: e.target.value })}
+                              placeholder="https://linkedin.com/in/yourprofile"
+                            />
+                          </div>
                         </div>
-                        <div className="form-group">
-                          <label>Skills (comma separated)</label>
-                          <input
-                            type="text"
-                            value={profileData.skills}
-                            onChange={(e) => setProfileData({ ...profileData, skills: e.target.value })}
-                          />
-                        </div>
-                        <div className="form-group">
-                          <label>Interests (comma separated)</label>
-                          <input
-                            type="text"
-                            value={profileData.interests}
-                            onChange={(e) => setProfileData({ ...profileData, interests: e.target.value })}
-                          />
-                        </div>
-                        <div className="form-group">
-                          <label>LinkedIn Profile</label>
-                          <input
-                            type="url"
-                            value={profileData.linkedinProfile}
-                            onChange={(e) => setProfileData({ ...profileData, linkedinProfile: e.target.value })}
-                          />
-                        </div>
-                        <div className="form-actions">
+
+                        <div className="profile-actions-sticky">
                           <button
-                            className="btn-secondary"
+                            className="btn-secondary btn-lg"
                             onClick={handleCancelProfile}
                             disabled={profileSaving}
                           >
@@ -817,7 +965,7 @@ export default function StudentDashboard() {
                             Cancel
                           </button>
                           <button
-                            className="btn-primary"
+                            className="btn-primary btn-lg"
                             onClick={handleSaveProfile}
                             disabled={profileSaving}
                           >
@@ -827,46 +975,93 @@ export default function StudentDashboard() {
                         </div>
                       </div>
                     ) : (
-                      <div className="profile-view">
-                        <div className="profile-view-row">
-                          <div className="profile-view-item">
-                            <label>Full Name</label>
-                            <p>{profile.fullName || 'Not set'}</p>
+                      /* View Mode */
+                      <div className="profile-view-container">
+                        <div className="profile-section-card">
+                          <h3 className="section-card-title">
+                            <User size={20} />
+                            Personal Information
+                          </h3>
+                          <div className="profile-info-grid">
+                            <div className="profile-info-item">
+                              <label>Full Name</label>
+                              <p>{profile.fullName || 'Not set'}</p>
+                            </div>
+                            <div className="profile-info-item">
+                              <label>Email</label>
+                              <p>{profile.email}</p>
+                            </div>
+                            <div className="profile-info-item">
+                              <label>Roll Number</label>
+                              <p>{profile.rollNumber || 'Not set'}</p>
+                            </div>
+                            <div className="profile-info-item">
+                              <label>Phone</label>
+                              <p>{profile.phone || 'Not set'}</p>
+                            </div>
                           </div>
-                          <div className="profile-view-item">
-                            <label>Email</label>
-                            <p>{profile.email}</p>
+                        </div>
+
+                        <div className="profile-section-card">
+                          <h3 className="section-card-title">
+                            <FileText size={20} />
+                            About Me
+                          </h3>
+                          <p className="profile-bio">{profile.bio || 'No bio added yet. Click "Edit Profile" to add one.'}</p>
+                        </div>
+
+                        <div className="profile-section-card">
+                          <h3 className="section-card-title">
+                            <Zap size={20} />
+                            Skills & Expertise
+                          </h3>
+                          {profile.skills && profile.skills.length > 0 ? (
+                            <div className="tags-display-view">
+                              {profile.skills.map((skill, index) => (
+                                <span key={index} className="tag skill-tag view-mode">
+                                  {skill}
+                                </span>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="empty-message">No skills added yet</p>
+                          )}
+                        </div>
+
+                        <div className="profile-section-card">
+                          <h3 className="section-card-title">
+                            <Rocket size={20} />
+                            Interests & Hobbies
+                          </h3>
+                          {profile.interests && profile.interests.length > 0 ? (
+                            <div className="tags-display-view">
+                              {profile.interests.map((interest, index) => (
+                                <span key={index} className="tag interest-tag view-mode">
+                                  {interest}
+                                </span>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="empty-message">No interests added yet</p>
+                          )}
+                        </div>
+
+                        <div className="profile-section-card">
+                          <h3 className="section-card-title">
+                            <ExternalLink size={20} />
+                            Social Links
+                          </h3>
+                          <div className="profile-info-item">
+                            <label>LinkedIn Profile</label>
+                            {profile.linkedinProfile ? (
+                              <a href={profile.linkedinProfile} target="_blank" rel="noopener noreferrer" className="social-link">
+                                <ExternalLink size={16} />
+                                {profile.linkedinProfile}
+                              </a>
+                            ) : (
+                              <p>Not set</p>
+                            )}
                           </div>
-                        </div>
-                        <div className="profile-view-row">
-                          <div className="profile-view-item">
-                            <label>Roll Number</label>
-                            <p>{profile.rollNumber || 'Not set'}</p>
-                          </div>
-                          <div className="profile-view-item">
-                            <label>Phone</label>
-                            <p>{profile.phone || 'Not set'}</p>
-                          </div>
-                        </div>
-                        <div className="profile-view-item">
-                          <label>Bio</label>
-                          <p>{profile.bio || 'No bio added yet'}</p>
-                        </div>
-                        <div className="profile-view-item">
-                          <label>Skills</label>
-                          <p>{profile.skills?.join(', ') || 'No skills added yet'}</p>
-                        </div>
-                        <div className="profile-view-item">
-                          <label>Interests</label>
-                          <p>{profile.interests?.join(', ') || 'No interests added yet'}</p>
-                        </div>
-                        <div className="profile-view-item">
-                          <label>LinkedIn Profile</label>
-                          <p>{profile.linkedinProfile ? (
-                            <a href={profile.linkedinProfile} target="_blank" rel="noopener noreferrer">
-                              {profile.linkedinProfile}
-                            </a>
-                          ) : 'Not set'}</p>
                         </div>
                       </div>
                     )}

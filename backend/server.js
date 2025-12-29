@@ -23,7 +23,7 @@ if (result.error) {
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import mongoose from 'mongoose';
+import { testConnection } from './config/supabase.js';
 import authRoutes from './routes/auth.routes.js';
 import userRoutes from './routes/user.routes.js';
 import projectRoutes from './routes/project.routes.js';
@@ -60,15 +60,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(requestLogger);
 
-// Database Connection
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => {
-    console.log('✅ MongoDB connected successfully');
-  })
-  .catch((err) => {
-    console.error('❌ MongoDB connection error:', err);
-    process.exit(1);
-  });
+// Database Connection - Supabase
+testConnection().catch((err) => {
+  console.error('❌ Supabase connection error:', err);
+  // Don't exit - allow server to start even if Supabase is not configured yet
+});
 
 // Load Student Data from CSV
 loadStudentData()

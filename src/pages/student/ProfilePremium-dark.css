@@ -1,0 +1,149 @@
+/* ===================================
+   PREMIUM PROFILE TAB - DARK MODE
+   =================================== */
+
+/* Profile Header Card Dark Mode */
+.dark-mode .profile-header-card {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+    border-color: #334155 !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+}
+
+.dark-mode .profile-cover-gradient {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+}
+
+.dark-mode .profile-avatar-large {
+    border-color: #1e293b !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+}
+
+.dark-mode .profile-header-info h2 {
+    color: #f1f5f9 !important;
+    text-shadow: 0 2px 8px rgba(129, 140, 248, 0.2);
+}
+
+.dark-mode .profile-email {
+    color: #94a3b8 !important;
+}
+
+.dark-mode .profile-badge.secondary {
+    background: #334155 !important;
+    color: #cbd5e1 !important;
+    border-color: #475569 !important;
+}
+
+/* Section Cards Dark Mode */
+.dark-mode .profile-section-card {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+    border-color: #334155 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark-mode .profile-section-card:hover {
+    box-shadow: 0 4px 12px rgba(129, 140, 248, 0.2) !important;
+}
+
+.dark-mode .section-card-title {
+    color: #f1f5f9 !important;
+    border-bottom-color: #334155 !important;
+}
+
+.dark-mode .section-card-title svg {
+    color: #818cf8 !important;
+}
+
+/* Tags Input Container Dark Mode */
+.dark-mode .tags-input-container {
+    background: #0f172a !important;
+    border-color: #334155 !important;
+}
+
+.dark-mode .tags-input-container:focus-within {
+    border-color: #818cf8 !important;
+    background: #1e293b !important;
+    box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.2) !important;
+}
+
+.dark-mode .tag.skill-tag {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%) !important;
+    color: #93c5fd !important;
+    border-color: #3b82f6 !important;
+}
+
+.dark-mode .tag.interest-tag {
+    background: linear-gradient(135deg, #831843 0%, #9f1239 100%) !important;
+    color: #fda4af !important;
+    border-color: #f43f5e !important;
+}
+
+.dark-mode .tag-input {
+    color: #e2e8f0 !important;
+}
+
+.dark-mode .tag-input::placeholder {
+    color: #64748b !important;
+}
+
+.dark-mode .input-hint {
+    color: #94a3b8 !important;
+}
+
+.dark-mode .char-count {
+    color: #94a3b8 !important;
+}
+
+/* Sticky Actions Dark Mode */
+.dark-mode .profile-actions-sticky {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+    border-color: #334155 !important;
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Profile Info Dark Mode */
+.dark-mode .profile-info-item label {
+    color: #94a3b8 !important;
+}
+
+.dark-mode .profile-info-item p {
+    color: #e2e8f0 !important;
+}
+
+.dark-mode .profile-bio {
+    color: #cbd5e1 !important;
+}
+
+.dark-mode .empty-message {
+    color: #64748b !important;
+}
+
+.dark-mode .social-link {
+    color: #818cf8 !important;
+}
+
+.dark-mode .social-link:hover {
+    color: #a5b4fc !important;
+}
+
+/* Form Elements Dark Mode */
+.dark-mode .form-group input,
+.dark-mode .form-group textarea {
+    background: #0f172a !important;
+    border-color: #334155 !important;
+    color: #e2e8f0 !important;
+}
+
+.dark-mode .form-group input:focus,
+.dark-mode .form-group textarea:focus {
+    border-color: #818cf8 !important;
+    box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.2) !important;
+}
+
+.dark-mode .form-group input:disabled {
+    background: #334155 !important;
+    color: #64748b !important;
+}
+
+.dark-mode .form-group label {
+    color: #cbd5e1 !important;
+}

@@ -1,112 +1,101 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
 # Dependencies
-node_modules
+node_modules/
+*/node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
 .pnp
 .pnp.js
-.pnp.loader.mjs
 
-# Production build
-dist
-dist-ssr
-build
-*.local
-.output
-.vercel
-.netlify
-
-# Environment variables
+# Environment Variables
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
-.env.*.local
+.env.backup
+.env.github-configured
+*.env
 
-# Sensitive files
-sheets_creds.json
-firebase_creds.json
-*.key
-*.pem
-*.p12
-*.crt
-*.cer
-config.js
-secrets.json
-credentials.json
+# Production Build
+dist/
+build/
+out/
+.next/
 
-# IDE and Editor
-.vscode/*
-!.vscode/extensions.json
-!.vscode/settings.json
-.idea
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Runtime
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Testing
+coverage/
+.nyc_output/
+lib-cov/
+*.lcov
+.cache/
+.parcel-cache/
+
+# IDE / Editors
+.vscode/
 .idea/
-.DS_Store
-.AppleDouble
-.LSOverride
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
 *.swp
 *.swo
 *~
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-*.code-workspace
-
-# OS specific
+.DS_Store
 Thumbs.db
+*.sublime-project
+*.sublime-workspace
+
+# OS Files
 .DS_Store
 .DS_Store?
 ._*
 .Spotlight-V100
 .Trashes
 ehthumbs.db
-Desktop.ini
-
-# Testing
-.nyc_output
-coverage
-.coverage
-*.lcov
-test-results
-playwright-report
-test-results.xml
+Thumbs.db
+desktop.ini
 
 # Temporary files
-temp
-tmp
+tmp/
+temp/
 *.tmp
-tempCodeRunnerFile.js
+*.temp
+
+# AWS / Deployment (not using anymore)
+.elasticbeanstalk/
+.aws/
+.eb/
+
+# Railway
+.railway/
+
+# Vercel
+.vercel/
+
+# Database
+*.sqlite
+*.sqlite3
+*.db
+
+# Misc
 *.bak
-*.backup
-*.old
-
-# Cache
-.cache
-.parcel-cache
-.vite
-.eslintcache
-.stylelintcache
-
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
+*.swp
+*.orig
+.sass-cache/
+connect.lock
+typings/
 
 # Optional npm cache directory
 .npm
@@ -132,75 +121,16 @@ pids
 # Yarn Integrity file
 .yarn-integrity
 
-# dotenv environment variables file
-.env.test
-
-# parcel-bundler cache (https://parceljs.org/)
-.cache
-.parcel-cache
-
-# Next.js build output
-.next
-
-# Nuxt.js build / generate output
-.nuxt
-dist
-
-# Gatsby files
-.cache/
-public
-
-# Storybook build outputs
-.out
-.storybook-out
-
-# Temporary folders
-tmp/
-temp/
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-# MacOS
-.DS_Store
-.AppleDouble
-.LSOverride
-
-# Windows
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-
-# Linux
-*~
-
 # Firebase
+.firebase/
 firebase-debug.log
-firebase-debug.*.log
+firestore-debug.log
 
-# Local Netlify folder
-.netlify
+# Supabase (local only)
+.supabase/
 
-# SvelteKit build / generate output
-.svelte-kit
-
-# Vite
-.vite-cache
-
-# Tailwind
-.tailwind-cache
-
-# AI Agent files
-.agent/
-
-# AI-generated documentation (exclude main README)
-*.md
-!README.md
+# Documentation (keep README only)
+# Uncomment if you want to exclude all docs
+# docs/
+# *.md
+# !README.md
