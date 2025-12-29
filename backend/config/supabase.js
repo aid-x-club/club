@@ -59,6 +59,4 @@ export const testConnection = async () => {
     }
 };
 
-// Export the client
-export { supabase };
 export default supabase;
