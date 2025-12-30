@@ -11,7 +11,8 @@ export const generateToken = (userId, role) => {
 
 // Send response with token
 export const sendTokenResponse = (user, statusCode, res, message = 'Success') => {
-  const token = generateToken(user._id, user.role);
+  // Use user.id for Supabase (instead of user._id for Mongoose)
+  const token = generateToken(user.id, user.role);
 
   const cookieOptions = {
     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
@@ -20,13 +21,16 @@ export const sendTokenResponse = (user, statusCode, res, message = 'Success') =>
     sameSite: 'strict'
   };
 
+  // Return public user data (exclude password_hash)
+  const { password_hash, ...publicUser } = user;
+
   res.status(statusCode)
     .cookie('token', token, cookieOptions)
     .json({
       success: true,
       message,
       token,
-      user: user.getPublicProfile()
+      user: publicUser
     });
 };
 
